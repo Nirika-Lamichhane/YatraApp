@@ -3,7 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-import os
+from django.core.files.base import ContentFile
+
 from django.core.files.storage import default_storage
 
 import uuid

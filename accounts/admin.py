@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
 
     model = CustomUser
 
-    list_display = ('username', 'email', 'phone_number', 'is_staff', 'is_active')  # show these columns in user list
+    list_display = ('username', 'email', 'phone_number', 'is_staff', 'is_active','profile_photo','citizenship_photo')  # show these columns in user list
     list_filter = ('is_staff', 'is_active')
 
     fieldsets = UserAdmin.fieldsets + (

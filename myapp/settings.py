@@ -43,6 +43,11 @@ INSTALLED_APPS = [
 # telling django to use my custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+# Media settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -17,11 +17,24 @@ def user_citizenship_path(instance, filename):
     return f"citizenship_photos/user_{instance.username}/{filename}"
 from django.utils.translation import gettext_lazy as _
 
+# models.py
+
+class DestinationType(models.Model):
+    name = models.CharField(max_length=100)
+    icon=models.ImageField(upload_to='destination_types/icons/')
+
+class Destination(models.Model):
+    name = models.CharField(max_length=100)
+    type = models.ForeignKey(DestinationType, on_delete=models.CASCADE)
+
+
 class CustomUser(AbstractUser):
     email = models.EmailField(_('email address'), blank=True)
     phone_number = models.CharField(_('phone number'), max_length=15)
     profile_photo = models.ImageField(_('profile photo'), upload_to=user_profile_path)
     citizenship_photo = models.ImageField(_('citizenship photo'), upload_to=user_citizenship_path)
+    favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
+
 
 
     def __str__(self):

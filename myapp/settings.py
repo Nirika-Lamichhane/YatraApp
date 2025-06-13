@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts', # Custom app for user accounts
+    'rest_framework',  # Django REST Framework for API support
 ]
 
 # telling django to use my custom user model

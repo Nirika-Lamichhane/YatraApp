@@ -1,13 +1,17 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.contrib.auth.models import User
+
 from django.contrib.auth import authenticate
-from django.core.files.base import ContentFile
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from django.core.files.storage import default_storage
+from .models import DestinationType, Destination, CustomUser
+from .serializers import DestinationTypeSerializer, DestinationSerializer, CustomUserSerializer
 
-import uuid
+
+# --- User Authentication Views ---
 
 @csrf_exempt
 def register_view(request):
@@ -17,25 +21,15 @@ def register_view(request):
         email = data.get('email')
         password = data.get('password')
 
-        profile_photo = request.FILES.get('profile_photo')
-        citizenship_photo = request.FILES.get('citizenship_photo')
-
-        if User.objects.filter(username=username).exists():
+        if CustomUser.objects.filter(username=username).exists():
             return JsonResponse({'status': 'error', 'message': 'Username already exists'})
 
-        user = User.objects.create_user(username=username, email=email, password=password)
-
-        if profile_photo:
-            profile_filename = f"profile_photos/{uuid.uuid4().hex}_{profile_photo.name}"
-            default_storage.save(profile_filename, ContentFile(profile_photo.read()))
-
-        if citizenship_photo:
-            citizen_filename = f"citizenship_photos/{uuid.uuid4().hex}_{citizenship_photo.name}"
-            default_storage.save(citizen_filename, ContentFile(citizenship_photo.read()))
+        user = CustomUser.objects.create_user(username=username, email=email, password=password)
         user.save()
         return JsonResponse({'status': 'success', 'message': 'User registered successfully'})
 
     return JsonResponse({'status': 'error', 'message': 'Only POST method allowed'})
+
 
 @csrf_exempt
 def login_view(request):
@@ -51,3 +45,39 @@ def login_view(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid credentials'})
 
     return JsonResponse({'status': 'error', 'message': 'Only POST method allowed'})
+
+
+# --- Destination APIs using DRF ---
+
+@api_view(['GET'])
+def get_destination_types(request):
+    types = DestinationType.objects.all()
+    serializer = DestinationTypeSerializer(types, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_destinations_by_types(request):
+    type_ids = request.query_params.getlist('type_ids')  # e.g. ?type_ids=1&type_ids=2
+    destinations = Destination.objects.filter(type__id__in=type_ids)
+    serializer = DestinationSerializer(destinations, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_favorite_destinations(request):
+    user = request.user
+    destination_ids = request.data.get('destination_ids', [])
+    destinations = Destination.objects.filter(id__in=destination_ids)
+    user.favorites.set(destinations)
+    user.save()
+    return Response({"message": "Favorites updated successfully"})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_favorites(request):
+    user = request.user
+    serializer = CustomUserSerializer(user)
+    return Response(serializer.data)

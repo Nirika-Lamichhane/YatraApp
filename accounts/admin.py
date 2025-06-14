@@ -26,3 +26,8 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
 
 admin.site.register(CustomUser, CustomUserAdmin)
+from .models import DestinationType, Destination
+
+admin.site.register(DestinationType)
+admin.site.register(Destination)
+

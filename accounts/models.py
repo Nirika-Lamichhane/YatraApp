@@ -35,6 +35,10 @@ class CustomUser(AbstractUser):
     citizenship_photo = models.ImageField(_('citizenship photo'), upload_to=user_citizenship_path)
     favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
 
+    class Meta:
+        verbose_name = _('Member')
+        verbose_name_plural = _('Members')
+
 
 
     def __str__(self):

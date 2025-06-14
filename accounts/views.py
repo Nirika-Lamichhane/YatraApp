@@ -1,11 +1,10 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, get_user_model
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import DestinationType, Destination, CustomUser
 from .serializers import DestinationTypeSerializer, DestinationSerializer, CustomUserSerializer
@@ -14,74 +13,46 @@ import uuid
 
 User = get_user_model()
 
+from django.http import HttpResponse
 
-# --- User Authentication Views ---
-
-@csrf_exempt
-def register_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        phone_number = request.POST.get('phone_number')
+def home(request):
+    return HttpResponse("Welcome to the homepage!")
 
 
+
+# --- User Registration View using DRF and JWT tokens ---
+
+class RegisterAPIView(APIView):
+    permission_classes = [permissions.AllowAny]  # anyone can register
+
+    def post(self, request):
+        data = request.data.copy()  # mutable copy of incoming data
+
+        # Validate required files in request.FILES
         profile_photo = request.FILES.get('profile_photo')
         citizenship_photo = request.FILES.get('citizenship_photo')
 
-        if not username or not email or not password:
-            return JsonResponse({'status': 'error', 'message': 'Username, email, and password are required.'})
-
         if not profile_photo:
-            return JsonResponse({'status': 'error', 'message': 'Profile photo is required.'})
-
+            return Response({'profile_photo': ['This field is required.']}, status=status.HTTP_400_BAD_REQUEST)
         if not citizenship_photo:
-            return JsonResponse({'status': 'error', 'message': 'Citizenship photo is required.'})
+            return Response({'citizenship_photo': ['This field is required.']}, status=status.HTTP_400_BAD_REQUEST)
 
-        if CustomUser.objects.filter(username=username).exists():
-            return JsonResponse({'status': 'error', 'message': 'Username already exists.'})
+        # Save the files to request.data for serializer
+        data['profile_photo'] = profile_photo
+        data['citizenship_photo'] = citizenship_photo
 
-        user = CustomUser.objects.create_user(username=username, email=email, password=password, phone_number=phone_number)
+        serializer = CustomUserSerializer(data=data)
+        if serializer.is_valid():
+            user = serializer.save()
 
-        # Save uploaded files
-        profile_filename = f"profile_photos/{uuid.uuid4().hex}_{profile_photo.name}"
-        user.profile_photo.save(profile_filename, profile_photo)
-
-        citizen_filename = f"citizenship_photos/{uuid.uuid4().hex}_{citizenship_photo.name}"
-        user.citizenship_photo.save(citizen_filename, citizenship_photo)
-
-        user.save()
-
-        return JsonResponse({'status': 'success', 'message': 'User registered successfully.'})
-
-    return JsonResponse({'status': 'error', 'message': 'Only POST method allowed.'})
-
-
-@csrf_exempt
-def login_view(request):
-    if request.method == 'POST':
-        import json
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
-      
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Login successful.',
-                'user': {
-                    'username': user.username,
-                    'email': user.email,
-                    'profile_photo': user.profile_photo.url if user.profile_photo else None,
-                    'citizenship_photo': user.citizenship_photo.url if user.citizenship_photo else None,
-                }
-            })
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Invalid credentials.'})
-
-    return JsonResponse({'status': 'error', 'message': 'Only POST method allowed.'})
+            # Create JWT tokens for the new user
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': CustomUserSerializer(user).data
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # --- Destination APIs using DRF ---

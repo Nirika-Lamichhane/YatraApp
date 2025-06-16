@@ -4,7 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import home  # ✅ Import the view
 from accounts.views import RegisterAPIView # ✅ Import the registration view
-
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -17,6 +16,9 @@ urlpatterns = [
 
     path('accounts/', include('accounts.urls')),
 
+
+    # Include the accounts app URLs
+    path('api/', include('accounts.urls')),  # ✅ Include the accounts app URLs
     # JWT Token URLs
     path('api/register/', RegisterAPIView.as_view(), name='jwt_register'),  # 🔁 replaces register_view
 

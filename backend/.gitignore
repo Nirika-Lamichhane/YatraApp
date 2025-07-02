@@ -23,3 +23,7 @@ db.sqlite3
 # OS files
 .DS_Store
 Thumbs.db
+
+# Ignore other big files
+*.zip
+*.log

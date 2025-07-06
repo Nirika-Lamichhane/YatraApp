@@ -112,8 +112,8 @@ foods = pd.read_csv(os.path.join(BASE_DIR, 'foods.csv'))
 food_features = ['taste_rating', 'price', 'popularity']
 foods, food_model = cluster_items(foods, food_features)
 food_cluster_map = {
-    0: 'Affordable',
-    1: 'Premium Dish',
+    1: 'Affordable',
+    0: 'Premium Dish',
     2: 'Local Favorite'
 }
 foods = add_cluster_badges(foods, food_cluster_map)
@@ -147,7 +147,7 @@ data_storage = {
     'activities': activities,
     'hotels': hotels
 }
-print(foods.groupby('cluster').mean())  # Print mean of each cluster for foods
+print(foods.groupby('cluster')[['taste_rating', 'price', 'popularity']].mean())
 
 if __name__ == "__main__":
     # Testing prints when running this file directly

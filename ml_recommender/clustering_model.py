@@ -49,7 +49,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import os
-#  General Clustering Function 
+
 def cluster_items(df, features, n_clusters=3, random_state=42):
     """
     General clustering function for any item category.
@@ -61,92 +61,105 @@ def cluster_items(df, features, n_clusters=3, random_state=42):
         random_state (int): For reproducibility.
 
     Returns:
-        pd.DataFrame: DataFrame with 'cluster' and 'cluster_badge' columns.
+        pd.DataFrame: DataFrame with a new 'cluster' column.
+        KMeans: The trained KMeans model.
     """
-    # Select and clean features
+    # Select features and fill missing values
     selected_features = df[features].fillna(df[features].mean())
 
-    # Scale features
+    # Scale features to have mean=0 and variance=1
     scaler = StandardScaler()
     scaled_features = scaler.fit_transform(selected_features)
 
     # Apply KMeans clustering
     kmeans = KMeans(n_clusters=n_clusters, random_state=random_state)
     clusters = kmeans.fit_predict(scaled_features)
-    df['cluster'] = clusters
 
+    # Add cluster labels to DataFrame
+    df['cluster'] = clusters
     return df, kmeans
 
-
-#  Cluster Badge Mapping Function 
 def add_cluster_badges(df, cluster_mapping):
     """
-    Maps cluster IDs to friendly badge names.
+    Map cluster numbers to friendly badge names.
 
     Args:
         df (pd.DataFrame): DataFrame with 'cluster' column.
         cluster_mapping (dict): Mapping from cluster number to badge name.
 
     Returns:
-        pd.DataFrame: DataFrame with 'cluster_badge' column added.
+        pd.DataFrame: DataFrame with new 'cluster_badge' column.
     """
     df['cluster_badge'] = df['cluster'].map(cluster_mapping)
     return df
 
+# Get the folder of this script to load CSVs correctly
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-#  Example Workflow for Multiple Categories 
+# Load and cluster destinations
+destinations = pd.read_csv(os.path.join(BASE_DIR, 'destinations.csv'))
+dest_features = ['rating', 'price', 'popularity']
+destinations, dest_model = cluster_items(destinations, dest_features)
+dest_cluster_map = {
+    0: 'Budget-friendly',
+    1: 'Luxury',
+    2: 'Hidden Gem'
+}
+destinations = add_cluster_badges(destinations, dest_cluster_map)
+
+# Load and cluster foods
+foods = pd.read_csv(os.path.join(BASE_DIR, 'foods.csv'))
+food_features = ['taste_rating', 'price', 'popularity']
+foods, food_model = cluster_items(foods, food_features)
+food_cluster_map = {
+    0: 'Affordable',
+    1: 'Premium Dish',
+    2: 'Local Favorite'
+}
+foods = add_cluster_badges(foods, food_cluster_map)
+
+# Load and cluster activities
+activities = pd.read_csv(os.path.join(BASE_DIR, 'activities.csv'))
+activity_features = ['thrill_level', 'duration', 'popularity']
+activities, act_model = cluster_items(activities, activity_features)
+activity_cluster_map = {
+    0: 'Chill Vibes',
+    1: 'Adventure Packed',
+    2: 'Family Friendly'
+}
+activities = add_cluster_badges(activities, activity_cluster_map)
+
+# Load and cluster hotels
+hotels = pd.read_csv(os.path.join(BASE_DIR, 'hotels.csv'))
+hotels_features = ['price', 'rating', 'luxury_level']
+hotels, hotels_model = cluster_items(hotels, hotels_features)
+hotels_cluster_map = {
+    0: 'Affordable Stay',
+    1: 'Luxury Experience',
+    2: 'Boutique Hotel'
+}
+hotels = add_cluster_badges(hotels, hotels_cluster_map)
+
+# Store all clustered data in a dictionary for easy access
+data_storage = {
+    'destinations': destinations,
+    'foods': foods,
+    'activities': activities,
+    'hotels': hotels
+}
+print(foods.groupby('cluster').mean())  # Print mean of each cluster for foods
+
 if __name__ == "__main__":
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    # Testing prints when running this file directly
+    print("Destinations sample:\n", destinations.head(), "\n")
+    print("Foods sample:\n", foods.head(), "\n")
+    print("Activities sample:\n", activities.head(), "\n")
+    print("Hotels sample:\n", hotels.head())
 
-    #  For Destinations
-    destinations = pd.read_csv(os.path.join(BASE_DIR, 'destinations.csv'))
-    dest_features = ['rating', 'price', 'popularity']
-    destinations, dest_model = cluster_items(destinations, dest_features)
 
-    dest_cluster_map = {
-        0: 'Budget-friendly',
-        1: 'Luxury',
-        2: 'Hidden Gem'
-    }
-    destinations = add_cluster_badges(destinations, dest_cluster_map)
-    print("Clustered Destinations: \n", destinations)
+'''
+data storage is needed as it will keep all clustered dataframes readily available for program
+in app, a user might quickly switch between the categories then at that time i want to access the clustered data quickly without reading csv again
+for performing further filtering, displaying or interaction without reloading from csv everytime
 
-    # For Foods
-    foods = pd.read_csv(os.path.join(BASE_DIR, 'foods.csv'))
-    food_features = ['taste_rating', 'price', 'popularity']
-    foods, food_model = cluster_items(foods, food_features)
-
-    food_cluster_map = {
-        0: 'Affordable',
-        1: 'Premium Dish',
-        2: 'Local Favorite'
-    }
-    foods = add_cluster_badges(foods, food_cluster_map)
-    print("Clustered Foods: \n", foods)
-
-    # 🎢 For Activities
-    activities = pd.read_csv(os.path.join(BASE_DIR, 'activities.csv'))
-    activity_features = ['thrill_level', 'duration', 'popularity']
-    activities, act_model = cluster_items(activities, activity_features)
-
-    activity_cluster_map = {
-        0: 'Chill Vibes',
-        1: 'Adventure Packed',
-        2: 'Family Friendly'
-    }
-    activities = add_cluster_badges(activities, activity_cluster_map)
-    print("Clustered Activities: \n", activities)
-
-    # 🏨 For Hotels
-
-    hotels = pd.read_csv(os.path.join(BASE_DIR, 'hotels.csv'))
-    hotels_features = ['price', 'rating', 'luxury_level']
-    hotels, act_model = cluster_items(hotels, hotels_features)
-
-    hotels_cluster_map = {
-        0: 'Affordable Stay',
-        1: 'Luxury Experience',
-        2: 'Boutique Hotel'
-    }
-    hotels = add_cluster_badges(hotels,hotels_cluster_map)
-    print("Clustered Activities: \n", hotels)
+'''

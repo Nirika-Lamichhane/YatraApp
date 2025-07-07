@@ -1,5 +1,6 @@
 from clustering_model import data_storage
 import pandas as pd
+import os
 
 '''
 here category is input to the function which can be foods activities hotels or destinations
@@ -37,7 +38,7 @@ import psycopg2 # helps python talk to postgresql database
 # PostgreSQL connection details — update as per your setup
 DB_NAME = "recommendation_system"  # Name of your PostgreSQL database i.e like house
 DB_USER = "postgres"
-DB_PASSWORD = "your_password"
+DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -76,9 +77,11 @@ def log_user_Action(user_id, category, selected_badge, action_type, item_id=None
         )
         cursor = conn.cursor()
 
-        # Insert log entry into user_logs table
+        # Insert log entry into user_logs table 
+        # here in insert we are not inserting the action score so to fetch the datas from the table we have to use the action score to provide numerical values to them
+        
         cursor.execute('''
-            INSERT INTO user_logs (user_id, category, selected_badge, action_type, item_id, timestamp)
+            INSERT INTO user_logs (user_id, category, selected_badge, action_type, item_id, timestamp) 
             VALUES (%s, %s, %s, %s, %s, %s)
         ''', (
             log_entry['user_id'],
@@ -98,3 +101,10 @@ def log_user_Action(user_id, category, selected_badge, action_type, item_id=None
     except Exception as e:
         print(f"Error logging user action: {e}")
 
+''' 
+this is to check if the table is created or not
+
+log_user_Action(user_id=1, category='Foods', selected_badge='Affordable', action_type='click', item_id=101)
+log_user_Action(user_id=5, category='Hotels', selected_badge='Affordable Stay', action_type='click', item_id=101)
+log_user_Action(user_id=8, category='Destinations', selected_badge='Luxury', action_type='click', item_id=101)
+'''

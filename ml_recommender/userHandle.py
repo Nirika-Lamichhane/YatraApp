@@ -32,27 +32,29 @@ if __name__=="__main__":
 # log system to store the history of the system
 
 from datetime import datetime
-user_logs=[]
+import psycopg2 # helps python talk to postgresql database
 
-ACTION_SCORES={
+# PostgreSQL connection details — update as per your setup
+DB_NAME = "recommendation_system"  # Name of your PostgreSQL database i.e like house
+DB_USER = "postgres"
+DB_PASSWORD = "your_password"
+DB_HOST = "localhost"
+DB_PORT = "5432"
+
+ACTION_SCORES = {
     'view': 1,
     'click': 2,
-    'save':3,
-    'book':4
+    'save': 3,
+    'book': 4
 }
 
-def log_user_Action(user_id,category,selected_badge,action_type,item_id=None):
+def log_user_Action(user_id, category, selected_badge, action_type, item_id=None):
     """
-    Logs user actions for tracking and analysis.
-    
-    Args:
-        user_id (str): Unique identifier for the user.
-        category (str): Category of the item (e.g., 'foods', 'activities').
-        selected_badge (str): Badge selected by the user.
-        action_type (str): Type of action performed (e.g., 'view', 'click').
-        item_id (str, optional): Unique identifier for the item. Defaults to None.
+    Logs user actions for tracking and analysis in PostgreSQL.
     """
-    score = ACTION_SCORES.get(action_type, 0) # if action type not found then returns 0 by default
+    score = ACTION_SCORES.get(action_type, 0)  # Not used here but useful later
+
+    timestamp = datetime.now()
 
     log_entry = {
         'user_id': user_id,
@@ -60,7 +62,39 @@ def log_user_Action(user_id,category,selected_badge,action_type,item_id=None):
         'selected_badge': selected_badge,
         'action_type': action_type,
         'item_id': item_id,
-        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
+        'timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S')
     }
-    user_logs.append(log_entry)
+
+    try:
+        # Connect to PostgreSQL database
+        conn = psycopg2.connect(
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT
+        )
+        cursor = conn.cursor()
+
+        # Insert log entry into user_logs table
+        cursor.execute('''
+            INSERT INTO user_logs (user_id, category, selected_badge, action_type, item_id, timestamp)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        ''', (
+            log_entry['user_id'],
+            log_entry['category'],
+            log_entry['selected_badge'],
+            log_entry['action_type'],
+            log_entry['item_id'],
+            log_entry['timestamp']
+        ))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        print("User action logged to database successfully.")
+
+    except Exception as e:
+        print(f"Error logging user action: {e}")
+

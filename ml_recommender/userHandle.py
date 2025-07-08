@@ -101,10 +101,12 @@ def log_user_Action(user_id, category, selected_badge, action_type, item_id=None
     except Exception as e:
         print(f"Error logging user action: {e}")
 
-''' 
-this is to check if the table is created or not
-
+'''      
+# Add some sample user actions
 log_user_Action(user_id=1, category='Foods', selected_badge='Affordable', action_type='click', item_id=101)
-log_user_Action(user_id=5, category='Hotels', selected_badge='Affordable Stay', action_type='click', item_id=101)
-log_user_Action(user_id=8, category='Destinations', selected_badge='Luxury', action_type='click', item_id=101)
+log_user_Action(user_id=2, category='Foods', selected_badge='Affordable', action_type='view', item_id=102)
+log_user_Action(user_id=3, category='Hotels', selected_badge='Luxury Stay', action_type='book', item_id=201)
+log_user_Action(user_id=1, category='Hotels', selected_badge='Luxury Stay', action_type='save', item_id=201)
+log_user_Action(user_id=2, category='Destinations', selected_badge='Adventure', action_type='click', item_id=301)
+log_user_Action(user_id=3, category='Foods', selected_badge='Affordable', action_type='view', item_id=101)
 '''

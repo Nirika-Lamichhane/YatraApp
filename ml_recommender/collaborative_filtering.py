@@ -93,5 +93,5 @@ def recommend_items(user_id, user_similarities, user_item_matix, top_n=5):
         return scores.sort_values(ascending=False).head(top_n).index.tolist()  # return the top N list of items
     
     except Exception as e:
-        print(f"Error recommending items for user {user_id}: {e}")
+        print(f"Error recommending items for user {user_id} : {e}")
         return pd.Series()

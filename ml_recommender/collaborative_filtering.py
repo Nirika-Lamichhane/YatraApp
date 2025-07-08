@@ -58,5 +58,40 @@ def build_user_item_matrix(df):
     if df.empty:
         return pd.DataFrame()  # Return empty DataFrame if input is empty
     
-    user_item_matrix = df.pivot_table(index='user_id', columns='item_id', values='score', fill_value=0)
+    user_item_matrix = df.pivot_table(index='user_id', columns='item_id', values='score',aggfunc='sum', fill_value=0)
     return user_item_matrix
+
+def calculate_user_similarities(matrix):
+    if matrix.empty:
+        return pd.DataFrame()
+    
+    # calculates the similatities between users
+    user_similarity = cosine_similarity(matrix)
+    user_similarity_df = pd.DataFrame(user_similarity, index=matrix.index, columns=matrix.index) # this matrix.index creates the table/ matrix with the names os users on the both rows and columns as the id
+    return user_similarity_df
+
+def recommend_items(user_id, user_similarities, user_item_matix, top_n=5):
+    """
+    Recommend items for a given user based on user similarities.
+    
+    Args:
+        user_id (int): User ID for whom to recommend items.
+        user_similarities (pd.DataFrame): DataFrame containing user similarities.
+        user_item_matrix (pd.DataFrame): User-item interaction matrix.
+        top_n (int): Number of top recommendations to return.
+        
+    Returns:
+        list: List of recommended item IDs.
+    """
+    try:
+        similar_users= user_similarities[user_id].drop(user_id).sort_values(ascending=False) # this is the pandas series which gives the similar users
+        scores= user_item_matix.loc[similar_users.index].T.dot(similar_users) # this .dot treates the similar users i.e. pandas serials as the column matrix as users*1
+
+        # remove already interacted items by the user we want to recommend for
+        scores=scores.drop(user_item_matix.loc[user_id][user_item_matix.loc[user_id]>0].index, errors='ignore')
+
+        return scores.sort_values(ascending=False).head(top_n).index.tolist()  # return the top N list of items
+    
+    except Exception as e:
+        print(f"Error recommending items for user {user_id}: {e}")
+        return pd.Series()

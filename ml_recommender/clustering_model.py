@@ -55,9 +55,9 @@ def insert_clustered_items_to_db(df, category):
         conn.commit()
         cursor.close()
         conn.close()
-        print(f"✅ Inserted clustered data for '{category}' into database.")
+        print(f" Inserted clustered data for '{category}' into database.")
     except Exception as e:
-        print(f"❌ Error inserting {category}: {e}")
+        print(f" Error inserting {category}: {e}")
 
 # ------------------------ MAIN LOGIC ------------------------
 if __name__ == "__main__":

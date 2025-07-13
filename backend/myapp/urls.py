@@ -25,6 +25,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Refresh token
     # path('api/token/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),  # Logout (optional)
+
+    path('api/dashboard/', include('dashboard.urls')),  # Include the dashboard app URLs
 ]
 
 if settings.DEBUG:

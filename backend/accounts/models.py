@@ -33,7 +33,7 @@ class CustomUser(AbstractUser):
     phone_number = models.CharField(_('phone number'), max_length=15)
     profile_photo = models.ImageField(_('profile photo'), upload_to=user_profile_path)
     citizenship_photo = models.ImageField(_('citizenship photo'), upload_to=user_citizenship_path)
-    favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
+    #favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
 
     class Meta:
         verbose_name = _('Member')

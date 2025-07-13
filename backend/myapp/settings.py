@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts', # Custom app for user accounts
+    'dashboard', # Custom app for dashboard functionality
     'rest_framework',  # Django REST Framework for API support
     'rest_framework_simplejwt.token_blacklist',
 

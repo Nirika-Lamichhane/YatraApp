@@ -2,28 +2,39 @@ from rest_framework import serializers
 from .models import Place, Hotel, Food, Activity, Favorite, Comment
 
 class PlaceSerializer(serializers.ModelSerializer):
+    favorites_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Place
-        fields = '__all__'
+        fields = ['id', 'name', 'destination', 'description', 'image', 'favorites_count', 'comments_count']
 
 class HotelSerializer(serializers.ModelSerializer):
+    favorites_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Hotel
-        fields = '__all__'
+        fields = ['id', 'name', 'place', 'price_range', 'rating', 'image', 'description', 'favorites_count', 'comments_count']
 
 class FoodSerializer(serializers.ModelSerializer):
+    favorites_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Food
-        fields = '__all__'
+        fields = ['id', 'name', 'place', 'type', 'image', 'description', 'favorites_count', 'comments_count']
 
 class ActivitySerializer(serializers.ModelSerializer):
+    favorites_count = serializers.IntegerField(read_only=True)
+    comments_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Activity
-        fields = '__all__'
-
+        fields = ['id', 'name', 'place', 'duration', 'image', 'description', 'favorites_count', 'comments_count']
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    content_object = serializers.SerializerMethodField()  # optional: to show actual item name
+    content_object = serializers.SerializerMethodField()
 
     class Meta:
         model = Favorite
@@ -31,10 +42,10 @@ class FavoriteSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at']
 
     def get_content_object(self, obj):
-        return str(obj.content_object)  # will return something like "Hotel Everest" or "Activity at Pokhara"
-    
+        return str(obj.content_object)
+
 class CommentSerializer(serializers.ModelSerializer):
-    content_object = serializers.SerializerMethodField()  # optional: to show actual item name
+    content_object = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
@@ -42,4 +53,4 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at']
 
     def get_content_object(self, obj):
-        return str(obj.content_object)  # will return something like "Hotel Everest" or "Activity at Pokhara"
+        return str(obj.content_object)

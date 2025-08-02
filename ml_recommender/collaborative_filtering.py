@@ -3,6 +3,8 @@ import psycopg2
 import os
 from sklearn.metrics.pairwise import cosine_similarity
 
+print("collaborative needed for the users interaction")
+
 # connection details
 DB_NAME = "recommendation_system"
 DB_USER = "postgres"

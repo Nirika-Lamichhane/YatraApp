@@ -4,6 +4,8 @@ from sklearn.preprocessing import StandardScaler
 import os
 import psycopg2
 
+print(" hey this is clustering")
+
 # ------------------------ DATABASE SETTINGS ------------------------
 DB_NAME = "recommendation_system"
 DB_USER = "postgres"

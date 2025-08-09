@@ -27,3 +27,5 @@ Thumbs.db
 # Ignore other big files
 *.zip
 *.log
+
+backend/dashboard/scripts.py

@@ -7,3 +7,6 @@ print("its august 13 and i had the worst day, didnt write anything by myself on 
 print("its august 14 and today i spent the day sleeping in bed")
 
 print(" its august 15 and today i read the instrumentation chapter 8 and then thoroughly went through chapter 9. had lunch and made the lab report of use case diagram of the software engineering and currently doing this")
+
+print("its august 16. and today in morning after 8 i read the chapter 6 of the dc and then had the lunch and stayed scrolling the phones and then bought burger and fanta and then managed the clothes or cupboard and then had chatpat. then i am watching the podcast whats with of the womens making money and business.")
+

@@ -10,3 +10,4 @@ print(" its august 15 and today i read the instrumentation chapter 8 and then th
 
 print("its august 16. and today in morning after 8 i read the chapter 6 of the dc and then had the lunch and stayed scrolling the phones and then bought burger and fanta and then managed the clothes or cupboard and then had chatpat. then i am watching the podcast whats with of the womens making money and business.")
 
+print(" i forgot in august 17 huhu and its august 18 today and i gave my assesments of se") 

@@ -14,3 +14,7 @@ print(" i forgot in august 17 huhu and its august 18 today and i gave my assesme
 print("learnt about cg finoc and western union  about data engineer and scientist anaconda in python")
 
 print("learnt about what things can be done using the google maps and new that the feature of street view isnot the new feature but the old one that is released currently in nepal")
+
+print(" its august 20 today and bhadra 4, i.e. just 7 days for the exam day. i learned about the unstop today and made an account on that and used the paper trading app to buy some shares")
+print(" moreover i learnt about the ai fiesta of the dhruv rathee and ai wrapper, launched in august 17 18 tentatively. i also learned about the booatable usb and the installation of window i.e. the it help technician.")
+

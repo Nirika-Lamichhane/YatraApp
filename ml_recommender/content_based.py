@@ -19,3 +19,4 @@ print(" its august 20 today and bhadra 4, i.e. just 7 days for the exam day. i l
 print(" moreover i learnt about the ai fiesta of the dhruv rathee and ai wrapper, launched in august 17 18 tentatively. i also learned about the booatable usb and the installation of window i.e. the it help technician.")
 
 print(" its auhust 21 and today i woke up and read the prob chapter 5 and then managed the clothes and bed and then read the chp 5 of the coa and then i am watching the podcast of stock market. today i have a meeting on 5 so i am going to teach him at 4")
+print(" its august 22 today i learnt prob chapter 8 and the correlation of chp 7 and docker basics and its information")

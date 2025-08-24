@@ -20,3 +20,5 @@ print(" moreover i learnt about the ai fiesta of the dhruv rathee and ai wrapper
 
 print(" its auhust 21 and today i woke up and read the prob chapter 5 and then managed the clothes and bed and then read the chp 5 of the coa and then i am watching the podcast of stock market. today i have a meeting on 5 so i am going to teach him at 4")
 print(" its august 22 today i learnt prob chapter 8 and the correlation of chp 7 and docker basics and its information")
+
+print(" its august 24 now in 23 i forget beacause i woke up read field report then looked for github campus expert result and filled the tech leadhers form again as previous wasnot done well. nbut today i wake up read chp 1 and chp2 from mams note guides pdf and mero school vdos as well and practiced well. now its 9:02 and i will study chp 3 today and then sleep.")

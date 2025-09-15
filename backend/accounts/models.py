@@ -34,6 +34,15 @@ class CustomUser(AbstractUser):
     profile_photo = models.ImageField(_('profile photo'), upload_to=user_profile_path)
     citizenship_photo = models.ImageField(_('citizenship photo'), upload_to=user_citizenship_path)
     #favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
+    ROLE_CHOICES=[
+    (
+        'user','Normal User'
+    ),
+    (
+        'guide','Tour Guide'
+    )]
+
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
 
     class Meta:
         verbose_name = _('Member')

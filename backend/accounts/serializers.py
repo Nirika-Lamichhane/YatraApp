@@ -3,10 +3,11 @@ from .models import CustomUser, DestinationType, Destination
 
 class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
+    role =serializers.ChoiceField(choices=CustomUser.ROLE_CHOICES, required=True)
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'phone_number', 'profile_photo', 'citizenship_photo', 'password']
+        fields = ['id', 'username', 'email', 'phone_number', 'profile_photo', 'citizenship_photo', 'password', 'role']
         extra_kwargs = {
             'password': {'write_only': True},
             'profile_photo': {'required': True},
@@ -14,11 +15,22 @@ class CustomUserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+        role = validated_data.pop('role')
         password = validated_data.pop('password')
         user = CustomUser(**validated_data)
         user.set_password(password)  # hashes the password properly
+        user.role = role
         user.save()
+
+        # assign to group automatically based on role for permissions
+        from django.contrib.auth.models import Group
+        if role == 'guide':
+            group = Group.objects.get(name='Tour Guide')
+        else:
+            group = Group.objects.get(name='Regular User')
+        user.groups.add(group)
         return user
+
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)

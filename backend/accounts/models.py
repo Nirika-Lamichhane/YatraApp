@@ -13,9 +13,7 @@ def user_profile_path(instance, filename):  # here filename is the name of the f
     '''
     return f"profile_photos/user_{instance.username}/{filename}"
 
-def user_citizenship_path(instance, filename):
-    return f"citizenship_photos/user_{instance.username}/{filename}"
-from django.utils.translation import gettext_lazy as _
+
 
 # models.py
 
@@ -32,7 +30,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_('email address'), blank=True)
     phone_number = models.CharField(_('phone number'), max_length=15)
     profile_photo = models.ImageField(_('profile photo'), upload_to=user_profile_path)
-    citizenship_photo = models.ImageField(_('citizenship photo'), upload_to=user_citizenship_path)
+
+    citizenship_number =models.CharField(_('citizenship number'), max_length=50, blank=True)
+
+
+
     #favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
     ROLE_CHOICES=[
     (
@@ -52,3 +54,4 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+    

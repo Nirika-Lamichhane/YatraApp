@@ -12,14 +12,14 @@ class CustomUserAdmin(UserAdmin):
 
     model = CustomUser
 
-    list_display = ('username', 'email', 'phone_number','role', 'is_staff', 'is_active','profile_photo','citizenship_photo')  # show these columns in user list
+    list_display = ('username', 'email', 'phone_number','role', 'is_staff', 'is_active','profile_photo','citizenship_number')  # show these columns in user list
     list_filter = ('is_staff', 'is_active')
 
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('phone_number', 'profile_photo', 'citizenship_photo','role')}),
+        (None, {'fields': ('phone_number', 'profile_photo', 'citizenship_number','role')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('username', 'email', 'phone_number', 'profile_photo', 'citizenship_photo', 'role','password1', 'password2')}),
+        (None, {'fields': ('username', 'email', 'phone_number', 'profile_photo', 'citizenship_number', 'role','password1', 'password2')}),
     )
 
     search_fields = ('username', 'email', 'phone_number')

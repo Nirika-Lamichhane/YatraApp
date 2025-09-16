@@ -32,16 +32,13 @@ class RegisterAPIView(APIView):
 
         # Validate required files in request.FILES
         profile_photo = request.FILES.get('profile_photo')
-        citizenship_photo = request.FILES.get('citizenship_photo')
 
         if not profile_photo:
             return Response({'profile_photo': ['This field is required.']}, status=status.HTTP_400_BAD_REQUEST)
-        if not citizenship_photo:
-            return Response({'citizenship_photo': ['This field is required.']}, status=status.HTTP_400_BAD_REQUEST)
+        
 
         # Save the files to request.data for serializer
         data['profile_photo'] = profile_photo
-        data['citizenship_photo'] = citizenship_photo
 
         serializer = CustomUserSerializer(data=data)
         if serializer.is_valid():

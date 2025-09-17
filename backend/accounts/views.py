@@ -90,16 +90,3 @@ def get_user_favorites(request):
     return Response(serializer.data)
 
 
-# this is the view of recommendation system, we can change it later with actual ML logic
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])  # 👈 ensures the user must be logged in
-def recommend_view(request):
-    user = request.user  # 👈 Gets the logged-in user
-
-    # You can add ML logic here later using the user profile
-    serializer = CustomUserSerializer(user)
-    
-    return Response({
-        "user": serializer.data,
-        "recommendations": ["Pokhara", "Mustang", "Bandipur"]  # dummy for now
-    }, status=status.HTTP_200_OK)

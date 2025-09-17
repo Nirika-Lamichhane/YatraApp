@@ -1,15 +1,19 @@
 # dashboard/ml/db_loader.py
 import pandas as pd
-import psycopg2
-import os
+import psycopg2  # to communicate with PostgreSQL
+import os        # to read environment variables
 
-# ------------------------ DATABASE SETTINGS ------------------------
-DB_NAME = "your_db_name"  # replace with your DB name
-DB_USER = "postgres"      # or your DB user
+# ------------------------ DATABASE SETTINGS -------------------
+DB_NAME = "recommendation_system"
+DB_USER = "postgres"
 DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
+# ------------------------ GLOBAL CACHE ------------------------
+user_interaction_cache = None  # This will store merged favorites + comments in memory
+
+# ------------------------ DATABASE CONNECTION ------------------------
 def get_connection():
     """Return a new connection to the PostgreSQL database."""
     return psycopg2.connect(
@@ -20,6 +24,7 @@ def get_connection():
         port=DB_PORT
     )
 
+# ------------------------ TABLE LOADER ------------------------
 def load_table(table_name):
     """Fetch a table from the database and return as a Pandas DataFrame."""
     try:
@@ -31,26 +36,62 @@ def load_table(table_name):
         print(f"Error loading table {table_name}: {e}")
         return pd.DataFrame()
 
+# MERGE USER INTERACTIONS  this returns a merged dataframe 
+def load_user_interactions(force_refresh=False):
+    """
+    Load favorites + comments and merge into one DataFrame.
+    Cache the result in memory to avoid re-merging every login.
+
+    Args:
+        force_refresh (bool): If True, reload data from DB even if cached.
+
+    Returns:
+        pd.DataFrame: Merged user interactions
+    """
+    global user_interaction_cache
+
+    # Return cached version if available and not forced to refresh
+    if user_interaction_cache is not None and not force_refresh:
+        return user_interaction_cache
+
+    # Load favorites and comments
+    favorites = load_table("dashboard_favorite")
+    comments = load_table("dashboard_comment")
+
+    # Add a column to distinguish the type of interaction
+    if not favorites.empty:
+        favorites['interaction_type'] = 'favorite'
+    if not comments.empty:
+        comments['interaction_type'] = 'comment'
+
+    # Merge both tables into a single DataFrame
+    user_interaction_cache = pd.concat([favorites, comments], ignore_index=True)
+
+    return user_interaction_cache
+
+# ------------------------ LOAD ALL DATA ------------------------
 def load_all_data():
     """
     Load all required tables from PostgreSQL.
-    
+
     Returns:
         tuple: destinations, destination_types, places, activities, foods, hotels, user_interactions
     """
-    destinations = load_table("destinations")
-    destination_types = load_table("destination_types")
-    places = load_table("places")
-    activities = load_table("activities")
-    foods = load_table("foods")
-    hotels = load_table("hotels")
-    user_interactions = load_table("user_interactions")  # or favorites/logs table
+    destinations = load_table("accounts_destination")
+    destination_types = load_table("accounts_destinationtype")
+    places = load_table("dashboard_place")
+    activities = load_table("dashboard_activity")
+    foods = load_table("dashboard_food")
+    hotels = load_table("dashboard_hotel")
 
-    # If needed, merge destinations with destination_types
+    # Load merged user interactions from cache (or DB if first time)
+    user_interactions = load_user_interactions()
+
+    # Merge destinations with destination_types if available
     if not destinations.empty and not destination_types.empty:
         destinations = destinations.merge(
             destination_types,
-            left_on="type_id",  # adjust according to your DB schema
+            left_on="type_id",  # foreign key pointing to destination_type
             right_on="id",
             suffixes=('', '_type')
         )

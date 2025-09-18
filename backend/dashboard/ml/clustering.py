@@ -1,4 +1,5 @@
 # dashboard/ml/clustering.py
+print("this is clustering")
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans

@@ -1,6 +1,6 @@
 # dashboard/views.py
 
-# ------------------- DRF and Django imports -------------------
+# ------------------- DRF imports -------------------
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
@@ -13,15 +13,15 @@ from .serializers import (
     FavoriteSerializer, CommentSerializer
 )
 
-# ------------------- ML imports from db_loader -------------------
-from .ml.db_loader import (
+# ------------------- ML helpers -------------------
+from .ml.dataLoader import (
     load_all_data,
     create_user_item_matrix,
     get_recommendations,
     fetch_items_from_ids
 )
 
-# ------------------- CRUD API ViewSets -------------------
+# ------------------- CRUD APIs -------------------
 
 class PlaceViewSet(viewsets.ModelViewSet):
     queryset = Place.objects.all()
@@ -49,7 +49,7 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Automatically assigns the logged-in user to the favorite
+        # Automatically attach the logged-in user to the favorite
         serializer.save(user=self.request.user)
 
 
@@ -59,7 +59,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Automatically assigns the logged-in user to the comment
+        # Automatically attach the logged-in user to the comment
         serializer.save(user=self.request.user)
 
 
@@ -69,23 +69,27 @@ class CommentViewSet(viewsets.ModelViewSet):
 @permission_classes([IsAuthenticated])
 def recommend_view(request):
     """
-    Generates initial personalized recommendations for the logged-in user
-    using collaborative filtering on user interactions.
+    Returns personalized recommendations for the logged-in user.
+    Uses favorites and comments for collaborative filtering.
     """
 
-    user_id = request.user.id  # Get logged-in user's ID
+    user_id = request.user.id  # Get the logged-in user ID
 
-    # Step 1: Load all necessary tables from PostgreSQL into pandas DataFrames
+    # Step 1: Load all necessary tables into pandas DataFrames
     destinations, destination_types, places, activities, foods, hotels, user_interactions = load_all_data()
 
-    # Step 2: Create a user-item interaction matrix
-    # Rows = users, Columns = unique items (combination of content_type_id + object_id)
+    # Step 2: Create user-item interaction matrix
     user_item_matrix = create_user_item_matrix(user_interactions)
+    # This matrix has:
+    # Rows = users
+    # Columns = items (Place, Hotel, Food, Activity)
+    # Value = 1 if favorite, 0.5 if comment (example)
 
-    # Step 3: Generate recommended item IDs for this user
+    # Step 3: Get top recommended item IDs for this user
     recommended_item_ids = get_recommendations(user_id, user_item_matrix, top_n=5)
+    # Example output: ['place_12', 'hotel_3', 'food_5', ...]
 
-    # Step 4: Fetch actual item objects (places, hotels, foods, activities) from recommended IDs
+    # Step 4: Convert item IDs to actual Django objects
     recommended_items = fetch_items_from_ids(
         recommended_item_ids,
         places=places,
@@ -94,7 +98,7 @@ def recommend_view(request):
         activities=activities
     )
 
-    # Step 5: Serialize each type of item for API response
+    # Step 5: Serialize each type of item
     serializer = {
         'places': PlaceSerializer(recommended_items.get('places', []), many=True).data,
         'hotels': HotelSerializer(recommended_items.get('hotels', []), many=True).data,
@@ -102,7 +106,7 @@ def recommend_view(request):
         'activities': ActivitySerializer(recommended_items.get('activities', []), many=True).data,
     }
 
-    # Step 6: Return recommendations as JSON
+    # Step 6: Return JSON response
     return Response({
         "user_id": user_id,
         "recommendations": serializer

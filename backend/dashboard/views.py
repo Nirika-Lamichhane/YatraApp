@@ -14,12 +14,8 @@ from .serializers import (
 )
 
 # ------------------- ML helpers -------------------
-from .ml.dataLoader import (
-    load_all_data,
-    create_user_item_matrix,
-    get_recommendations,
-    fetch_items_from_ids
-)
+from .ml.dataLoader import load_all_data
+
 
 # ------------------- CRUD APIs -------------------
 

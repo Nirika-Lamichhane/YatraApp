@@ -1,5 +1,5 @@
 # dashboard/ml/clustering.py
-print("this is clustering")
+
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
@@ -15,6 +15,9 @@ def cluster_items(df, features, n_clusters=3, random_state=42):
         df (pd.DataFrame): original df with 'cluster' column
         kmeans (KMeans object): trained KMeans model
     """
+    if df.empty:
+        return df, None
+    
     df_copy = df.copy()
     df_copy[features] = df_copy[features].fillna(0)
     scaler = StandardScaler()

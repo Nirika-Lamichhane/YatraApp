@@ -6,6 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
+# -------------------Accounts app imports -------------------
+from accounts.models import Destination, DestinationType
+
 # ------------------- Models and serializers -------------------
 from .models import Place, Hotel, Food, Activity, Favorite, Comment
 from .serializers import (
@@ -15,6 +18,7 @@ from .serializers import (
 
 # ------------------- ML helpers -------------------
 from .ml.dataLoader import load_all_data
+from .ml.clustering import cluster_for_dashboard
 
 
 # ------------------- CRUD APIs -------------------
@@ -71,39 +75,30 @@ def recommend_view(request):
 
     user_id = request.user.id  # Get the logged-in user ID
 
+    # get query parameters
+    destination_id= request.Get.get('destination_id', None)
+    item_type=request.Get.get('item_type', 'places')  # 'place', 'hotel', 'food', 'activity' and default is places
+
+    # Load necessary data from DB
+    destination_types= DestinationType.objects.all()
+    destinations= Destination.objects.all()
+
     # Step 1: Load all necessary tables into pandas DataFrames
-    destinations, destination_types, places, activities, foods, hotels, user_interactions = load_all_data()
+    places, activities, foods, hotels, user_interactions = load_all_data()
 
-    # Step 2: Create user-item interaction matrix
-    user_item_matrix = create_user_item_matrix(user_interactions)
-    # This matrix has:
-    # Rows = users
-    # Columns = items (Place, Hotel, Food, Activity)
-    # Value = 1 if favorite, 0.5 if comment (example)
-
-    # Step 3: Get top recommended item IDs for this user
-    recommended_item_ids = get_recommendations(user_id, user_item_matrix, top_n=5)
-    # Example output: ['place_12', 'hotel_3', 'food_5', ...]
-
-    # Step 4: Convert item IDs to actual Django objects
-    recommended_items = fetch_items_from_ids(
-        recommended_item_ids,
-        places=places,
-        hotels=hotels,
-        foods=foods,
-        activities=activities
-    )
-
-    # Step 5: Serialize each type of item
-    serializer = {
-        'places': PlaceSerializer(recommended_items.get('places', []), many=True).data,
-        'hotels': HotelSerializer(recommended_items.get('hotels', []), many=True).data,
-        'foods': FoodSerializer(recommended_items.get('foods', []), many=True).data,
-        'activities': ActivitySerializer(recommended_items.get('activities', []), many=True).data,
-    }
-
-    # Step 6: Return JSON response
-    return Response({
-        "user_id": user_id,
-        "recommendations": serializer
-    }, status=200)
+    # filter by destination if provided
+    if destination_id:
+        destination_id=int(destination_id)
+        if item_type=='places':
+            df=places.filter(destination_id=destination_id)
+        elif item_type=='hotels':
+            df=hotels.filter(destination_id=destination_id)
+        elif item_type=='foods':
+            df=foods.filter(destination_id=destination_id)
+        elif item_type=='activities':
+            df=activities.filter(destination_id=destination_id)
+        else:
+            return Response({"error": "Invalid item_type"}, status=400)
+    
+        
+    

@@ -2,23 +2,47 @@
 import pandas as pd
 import numpy as np
 
+from sklearn.metrics.pairwise import cosine_similarity
+
+'''  
+cosine similairty computes the similarity between users based on interactions
+how aligned are the preferences of 2 users
+
+'''
+
+# building the interaction datafrane
+
 def build_interactions(user_favorites, user_ratings, destination_links):
-    interactions = []
+
+    ''' 
+    the destination links is a dict mapping destination ids to lists of related item ids
+    using this all the items related to a favorited destination are also added with a lower score
+    user_favorites is the list of dict with user_id, item_id, type (destination, place, hotel, activity, food)
+    user_ratings is the list of dict representing explicit ratings given by users
+
+    '''
+    interactions = []  # empty list to append all user item ineteractions 
 
     for fav in user_favorites:
-        score = 2
+        score = 2  
+
+        # for the favorited destination, add related items with lower score
         if fav["type"] == "destination":
             interactions.append({
                 "user_id": fav["user_id"],
-                "item_id": f"dest_{fav['item_id']}",
+                "item_id": f"dest_{fav['item_id']}",  #  to know this is a destination
                 "score": score
             })
+
+            # appending related items with a lower score
             for related in destination_links.get(fav["item_id"], []):
                 interactions.append({
                     "user_id": fav["user_id"],
                     "item_id": related,
                     "score": 1
                 })
+
+        # append other types of favroites 
         else:
             interactions.append({
                 "user_id": fav["user_id"],
@@ -26,10 +50,12 @@ def build_interactions(user_favorites, user_ratings, destination_links):
                 "score": score
             })
 
+    # for the rating of the places 
+
     for rate in user_ratings:
         interactions.append({
             "user_id": rate["user_id"],
-            "item_id": f"place_{rate['item_id']}",
+            "item_id": f"{rate['type']}_{rate['item_id']}",
             "score": rate["rating"]
         })
 

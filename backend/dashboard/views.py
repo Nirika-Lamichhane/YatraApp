@@ -68,37 +68,32 @@ class CommentViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def recommend_view(request):
-    """
-    Returns personalized recommendations for the logged-in user.
-    Uses favorites and comments for collaborative filtering.
-    """
+   
+   
+   # load all data from db to dataframes
+   destinations, destination_types,places_df, activities_df, foods_df, hotels_df, user_interactions = load_all_data()
 
-    user_id = request.user.id  # Get the logged-in user ID
+   # we have to choose which to cluster in the dashboard
+   item_type = request.GET.get("item_type", "places")  # default = places
+   destination_id = request.GET.get("destination_id", None)
 
-    # get query parameters
-    destination_id= request.GET.get('destination_id', None)
-    item_type=request.GET.get('item_type', 'places')  # 'place', 'hotel', 'food', 'activity' and default is places
+   if not destination_id:
+       return Response({"error":" Please select a destination first."}, staus=404)
 
-    # Load necessary data from DB
-    destination_types= DestinationType.objects.all()
-    destinations= Destination.objects.all()
+   destination_id = int(destination_id)
 
-    # Step 1: Load all necessary tables into pandas DataFrames
-    places, activities, foods, hotels, user_interactions = load_all_data()
+   
 
-    # filter by destination if provided
-    if destination_id:
-        destination_id=int(destination_id)
-        if item_type=='places':
-            df=places.filter(destination_id=destination_id)
-        elif item_type=='hotels':
-            df=hotels.filter(destination_id=destination_id)
-        elif item_type=='foods':
-            df=foods.filter(destination_id=destination_id)
-        elif item_type=='activities':
-            df=activities.filter(destination_id=destination_id)
-        else:
-            return Response({"error": "Invalid item_type"}, status=400)
-    
-        
+
+
+
+
+
+   """  
+   here the data is loaded from database into the dataframes as python objects
+   and clustering is applied to them 
+   then this data is fetched using orm using clustered ids
+   serialize and returned  as json responses to use by flutter
+   """
+
     

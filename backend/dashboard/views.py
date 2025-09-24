@@ -76,8 +76,8 @@ def recommend_view(request):
     user_id = request.user.id  # Get the logged-in user ID
 
     # get query parameters
-    destination_id= request.Get.get('destination_id', None)
-    item_type=request.Get.get('item_type', 'places')  # 'place', 'hotel', 'food', 'activity' and default is places
+    destination_id= request.GET.get('destination_id', None)
+    item_type=request.GET.get('item_type', 'places')  # 'place', 'hotel', 'food', 'activity' and default is places
 
     # Load necessary data from DB
     destination_types= DestinationType.objects.all()

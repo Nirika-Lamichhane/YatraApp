@@ -54,3 +54,5 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_content_object(self, obj):
         return str(obj.content_object)
+    
+    print(" restarting after 2 days")

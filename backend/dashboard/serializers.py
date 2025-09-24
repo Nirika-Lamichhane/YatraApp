@@ -7,7 +7,7 @@ class PlaceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Place
-        fields = ['id', 'name', 'destination', 'description', 'image', 'favorites_count', 'comments_count']
+        fields = ['id', 'name', 'destination', 'description', 'image','rating', 'favorites_count', 'comments_count']
 
 class HotelSerializer(serializers.ModelSerializer):
     favorites_count = serializers.IntegerField(read_only=True)
@@ -15,7 +15,7 @@ class HotelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Hotel
-        fields = ['id', 'name', 'place', 'price_range', 'rating', 'image', 'description', 'favorites_count', 'comments_count']
+        fields = ['id', 'name', 'place', 'price_range', 'rating', 'image', 'description','price_range', 'favorites_count', 'comments_count']
 
 class FoodSerializer(serializers.ModelSerializer):
     favorites_count = serializers.IntegerField(read_only=True)
@@ -23,7 +23,7 @@ class FoodSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ['id', 'name', 'place', 'type', 'image', 'description', 'favorites_count', 'comments_count']
+        fields = ['id', 'name', 'place', 'type', 'image', 'rating','price_range','description', 'favorites_count', 'comments_count']
 
 class ActivitySerializer(serializers.ModelSerializer):
     favorites_count = serializers.IntegerField(read_only=True)
@@ -31,7 +31,7 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Activity
-        fields = ['id', 'name', 'place', 'duration', 'image', 'description', 'favorites_count', 'comments_count']
+        fields = ['id', 'name', 'place', 'duration', 'image', 'rating' ,'price_range','description', 'favorites_count', 'comments_count']
 
 class FavoriteSerializer(serializers.ModelSerializer):
     content_object = serializers.SerializerMethodField()

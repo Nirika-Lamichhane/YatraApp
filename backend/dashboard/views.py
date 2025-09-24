@@ -69,7 +69,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 @permission_classes([IsAuthenticated])
 def recommend_view(request):
    
-   
+   user_id=request.user.id
    # load all data from db to dataframes
    destinations, destination_types,places_df, activities_df, foods_df, hotels_df, user_interactions = load_all_data()
 
@@ -82,7 +82,43 @@ def recommend_view(request):
 
    destination_id = int(destination_id)
 
+   # filter items by destination
+   if item_type == "places":
+       
+       df_filtered = places_df[places_df["destination_id"] == destination_id]
+       numeric_features = ["rating"]
+
+   elif item_type == "hotels":
+        df_filtered = hotels_df[hotels_df["place_id"].isin(
+            places_df[places_df["destination_id"] == destination_id]["id"]
+        )]
+        numeric_features = ["rating", "price_range"]
+   elif item_type == "foods":
+        df_filtered = foods_df[foods_df["place_id"].isin(
+            places_df[places_df["destination_id"] == destination_id]["id"]
+        )]
+        numeric_features = ["rating", "price_range"]
+   elif item_type == "activities":
+        df_filtered = activities_df[activities_df["place_id"].isin(
+            places_df[places_df["destination_id"] == destination_id]["id"]
+        )]
+        numeric_features = ["rating", "price_range"]
+   else:
+        return Response({"error": "Invalid item_type"}, status=400)
+
+    # now applying clustering
+   badge_mapping={
+        0:"Budget",
+        1:"Mid range",
+        2:"Luxury"
+    }
+   df_clustered=cluster_for_dashboard(df_filtered,numeric_features, n_clusters=3, badge_mapping=badge_mapping)
+
+   # convert clustered df to django orm for the serialization and returing responses
    
+   
+   
+
 
 
 

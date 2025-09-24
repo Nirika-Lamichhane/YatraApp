@@ -8,6 +8,7 @@ class Place(models.Model):
     name = models.CharField(max_length=100)
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
+    rating= models.FloatField(default=0.0)
     image = models.ImageField(upload_to='places/', null=True, blank=True)
 
     def __str__(self):
@@ -26,8 +27,8 @@ class Place(models.Model):
 class Hotel(models.Model):
     name = models.CharField(max_length=100)
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
-    price_range = models.CharField(max_length=50)
-    rating = models.FloatField()
+    price_range = models.FloatField(default=100.0)
+    rating = models.FloatField(default=0.0)
     image = models.ImageField(upload_to='hotels/', null=True, blank=True)
     description = models.TextField(blank=True)  # Add description field for UI
 
@@ -48,6 +49,8 @@ class Food(models.Model):
     name = models.CharField(max_length=100)
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     type = models.CharField(max_length=50)
+    price_range = models.FloatField(default=100.0)
+    rating = models.FloatField(default=0.0)
     image = models.ImageField(upload_to='foods/', null=True, blank=True)
     description = models.TextField(blank=True)  # Add description field for UI
 
@@ -68,6 +71,8 @@ class Activity(models.Model):
     name = models.CharField(max_length=100)
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     duration = models.CharField(max_length=50)
+    price_range = models.FloatField(default=100.0)
+    rating = models.FloatField(default=0.0)
     image = models.ImageField(upload_to='activities/', null=True, blank=True)
     description = models.TextField(blank=True)  # Add description field for UI
 

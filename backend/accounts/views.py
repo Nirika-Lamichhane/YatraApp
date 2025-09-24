@@ -71,6 +71,11 @@ def get_destinations_by_types(request):
     return Response(serializer.data)
 
 
+''' 
+ this favroites is for the destination as destination tyoes is drop down and according to that
+ destination are shown and user can select multiple destination as his favorite
+ and submit to backend and backend will save it in the user model
+'''
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def submit_favorite_destinations(request):

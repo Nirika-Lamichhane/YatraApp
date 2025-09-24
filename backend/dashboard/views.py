@@ -115,9 +115,27 @@ def recommend_view(request):
    df_clustered=cluster_for_dashboard(df_filtered,numeric_features, n_clusters=3, badge_mapping=badge_mapping)
 
    # convert clustered df to django orm for the serialization and returing responses
+   ids = df_clustered["id"].tolist()
+   if item_type == "places":
+        queryset = Place.objects.filter(id__in=ids)
+        serializer = PlaceSerializer(queryset, many=True)
+   elif item_type == "hotels":
+        queryset = Hotel.objects.filter(id__in=ids)
+        serializer = HotelSerializer(queryset, many=True)
+   elif item_type == "foods":
+        queryset = Food.objects.filter(id__in=ids)
+        serializer = FoodSerializer(queryset, many=True)
+   elif item_type == "activities":
+        queryset = Activity.objects.filter(id__in=ids)
+        serializer = ActivitySerializer(queryset, many=True)
    
-   
-   
+   # return the response to the fluter frontend
+   return Response({
+        "user_id": user_id,
+        "destination_id": destination_id,
+        "item_type": item_type,
+        "clustered_data": serializer.data
+    }, status=200)
 
 
 

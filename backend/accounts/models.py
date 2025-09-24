@@ -35,7 +35,7 @@ class CustomUser(AbstractUser):
 
 
 
-    #favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
+    favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
     ROLE_CHOICES=[
     (
         'user','Normal User'

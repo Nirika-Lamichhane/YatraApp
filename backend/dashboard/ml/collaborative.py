@@ -1,5 +1,11 @@
 # dashboard/ml/collaborative.py
 import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+# building interaction dataframe
+
+
 
 def build_user_item_matrix(user_favorites_df):
     """

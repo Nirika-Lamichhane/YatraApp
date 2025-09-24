@@ -19,11 +19,19 @@ def user_profile_path(instance, filename):  # here filename is the name of the f
 
 class DestinationType(models.Model):
     name = models.CharField(max_length=100)
-    icon=models.ImageField(upload_to='destination_types/icons/')
+    
+    def __str__(self):
+        # this is used to show the name of destination in admin instead of just objects
+        return self.name
+    
+    
 
 class Destination(models.Model):
     name = models.CharField(max_length=100)
     type = models.ForeignKey(DestinationType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} ({self.type.name})"
 
 
 class CustomUser(AbstractUser):
@@ -53,5 +61,5 @@ class CustomUser(AbstractUser):
 
 
     def __str__(self):
-        return self.username
+        return f"{self.username} ({self.get_role_display()})"
     

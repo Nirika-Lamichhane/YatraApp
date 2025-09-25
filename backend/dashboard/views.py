@@ -19,6 +19,7 @@ from .serializers import (
 # ------------------- ML helpers -------------------
 from .ml.dataLoader import load_all_data
 from .ml.clustering import cluster_for_dashboard
+from .ml.collaborative import build_interactions, create_user_item_matrix, calculate_user_similarity, get_recommendations
 
 
 # ------------------- CRUD APIs -------------------
@@ -122,19 +123,36 @@ def recommend_view(request):
    user_comments = user_interactions.get("comments", [])
    destination_links = user_interactions.get("destination_links", {})
    place_links = user_interactions.get("place_links", {})
-   
 
+   # build interactions dataframe
 
-    # now applying clustering
-   badge_mapping={
+   interactions_df = build_interactions(
+       user_favorites, user_ratings, user_comments,
+       destination_links, place_links)
+   user_item_matrix= create_user_item_matrix(interactions_df)
+   user_similarity= calculate_user_similarity(user_item_matrix)
+
+   # collaborative filtering recommendations
+
+   if user_id in user_item_matrix.index and user_item_matrix.loc[user_id].sum()>0:
+       # user has previous interactions so cf
+       cf_recommendations_ids= get_recommendations(
+           user_id, user_item_matrix, user_similarity,
+           top_n=10, category=category_prefix
+       )
+
+       df_filtered= df_filtered[df_filtered["id"].isin(cf_recommendations_ids)]
+   else:
+       # no interactions then clustering
+        badge_mapping={
         0:"Budget",
         1:"Mid range",
         2:"Luxury"
     }
    df_clustered=cluster_for_dashboard(df_filtered,numeric_features, n_clusters=3, badge_mapping=badge_mapping)
-
-   # convert clustered df to django orm for the serialization and returing responses
-   ids = df_clustered["id"].tolist()
+      
+    # convert df to django orm for the serialization and returing responses
+   ids = df_filtered["id"].tolist()
    if item_type == "places":
         queryset = Place.objects.filter(id__in=ids)
         serializer = PlaceSerializer(queryset, many=True)

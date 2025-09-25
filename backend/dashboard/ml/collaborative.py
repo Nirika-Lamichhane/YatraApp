@@ -7,6 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 '''  
 cosine similairty computes the similarity between users based on interactions
 how aligned are the preferences of 2 users
+range 0 to 1
 
 '''
 

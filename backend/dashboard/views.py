@@ -87,24 +87,43 @@ def recommend_view(request):
        
        df_filtered = places_df[places_df["destination_id"] == destination_id]
        numeric_features = ["rating"]
+       category_prefix="place"
 
    elif item_type == "hotels":
         df_filtered = hotels_df[hotels_df["place_id"].isin(
             places_df[places_df["destination_id"] == destination_id]["id"]
         )]
         numeric_features = ["rating", "price_range"]
+        category_prefix="hotel"
+
    elif item_type == "foods":
         df_filtered = foods_df[foods_df["place_id"].isin(
             places_df[places_df["destination_id"] == destination_id]["id"]
         )]
         numeric_features = ["rating", "price_range"]
+        category_prefix="food"
+
    elif item_type == "activities":
         df_filtered = activities_df[activities_df["place_id"].isin(
             places_df[places_df["destination_id"] == destination_id]["id"]
         )]
         numeric_features = ["rating", "price_range"]
+        category_prefix="activity"
+
    else:
         return Response({"error": "Invalid item_type"}, status=400)
+   
+   
+      
+   # preparing user interactions for collaborative filtering
+
+   user_favorites = user_interactions.get("favorites", [])
+   user_ratings = user_interactions.get("ratings", [])
+   user_comments = user_interactions.get("comments", [])
+   destination_links = user_interactions.get("destination_links", {})
+   place_links = user_interactions.get("place_links", {})
+   
+
 
     # now applying clustering
    badge_mapping={

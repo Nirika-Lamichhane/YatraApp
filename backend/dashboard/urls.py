@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PlaceViewSet, HotelViewSet, FoodViewSet, ActivityViewSet, FavoriteViewSet, CommentViewSet        
+from .views import PlaceViewSet, HotelViewSet, FoodViewSet, ActivityViewSet, FavoriteViewSet, CommentViewSet, recommend_view     
 
 router = DefaultRouter()
 router.register(r'places', PlaceViewSet)
@@ -12,5 +12,7 @@ router.register(r'comments', CommentViewSet)
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include(router.urls)), # this is for viewsets
+    path('recommend/', recommend_view, name='recommend'), # this is for recommendation API
+
 ]

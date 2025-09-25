@@ -1,116 +1,114 @@
+# dashboard/ml/collaborative.py
 
 import pandas as pd
-import numpy as np
-
 from sklearn.metrics.pairwise import cosine_similarity
 
-'''  
-cosine similairty computes the similarity between users based on interactions
-how aligned are the preferences of 2 users
-range 0 to 1
-
-'''
-
-# building the interaction datafrane
-
+# --------------------------------------------------
+# STEP 1: Build interaction dataframe
+# --------------------------------------------------
 def build_interactions(user_favorites, user_ratings, destination_links):
+    """
+    Build a unified dataframe of user interactions.
 
-    ''' 
-    the destination links is a dict mapping destination ids to lists of related item ids
-    using this all the items related to a favorited destination are also added with a lower score
-    user_favorites is the list of dict with user_id, item_id, type (destination, place, hotel, activity, food)
-    user_ratings is the list of dict representing explicit ratings given by users
+    Args:
+        user_favorites (list of dict): [{'user_id': 1, 'item_id': 101, 'item_type': 'place'}, ...]
+        user_ratings (list of dict):   [{'user_id': 1, 'item_id': 101, 'rating': 4.5, 'item_type': 'hotel'}, ...]
+        destination_links (list of dict): [{'place_id': 101, 'hotel_id': 201, 'activity_id': 301, 'food_id': 401}, ...]
 
-    '''
-    interactions = []  # empty list to append all user item ineteractions 
+    Returns:
+        pd.DataFrame: user-item interactions with scores
+    """
 
+    interactions = []
+
+    # Favorites → implicit score
     for fav in user_favorites:
-        score = 2  
-
-        # for the favorited destination, add related items with lower score
-        if fav["type"] == "destination":
-            interactions.append({
-                "user_id": fav["user_id"],
-                "item_id": f"dest_{fav['item_id']}",  #  to know this is a destination
-                "score": score
-            })
-
-            # appending related items with a lower score
-            for related in destination_links.get(fav["item_id"], []):
-                interactions.append({
-                    "user_id": fav["user_id"],
-                    "item_id": related,
-                    "score": 1
-                })
-
-        # append other types of favroites 
-        else:
-            interactions.append({
-                "user_id": fav["user_id"],
-                "item_id": f"{fav['type']}_{fav['item_id']}",
-                "score": score
-            })
-
-    # for the rating of the places 
-
-    for rate in user_ratings:
         interactions.append({
-            "user_id": rate["user_id"],
-            "item_id": f"{rate['type']}_{rate['item_id']}",
-            "score": rate["rating"]
+            "user_id": fav["user_id"],
+            "item_id": f"{fav['item_type']}_{fav['item_id']}",
+            "score": 1.0
         })
+
+    # Ratings → explicit score
+    for rating in user_ratings:
+        interactions.append({
+            "user_id": rating["user_id"],
+            "item_id": f"{rating['item_type']}_{rating['item_id']}",
+            "score": rating["rating"]
+        })
+
+    # Destination links → propagate place interactions to hotels/activities/foods
+    for link in destination_links:
+        place_id = f"place_{link['place_id']}"
+        if "hotel_id" in link:
+            interactions.append({
+                "user_id": link.get("user_id", 0),  # optional, if linked by system
+                "item_id": f"hotel_{link['hotel_id']}",
+                "score": 0.5
+            })
+        if "activity_id" in link:
+            interactions.append({
+                "user_id": link.get("user_id", 0),
+                "item_id": f"activity_{link['activity_id']}",
+                "score": 0.5
+            })
+        if "food_id" in link:
+            interactions.append({
+                "user_id": link.get("user_id", 0),
+                "item_id": f"food_{link['food_id']}",
+                "score": 0.5
+            })
 
     return pd.DataFrame(interactions)
 
 
-def build_user_item_matrix(interactions_df):
-    return interactions_df.pivot_table(index="user_id", columns="item_id", values="score", fill_value=0)
+# --------------------------------------------------
+# STEP 2: Create user-item matrix
+# --------------------------------------------------
+def create_user_item_matrix(interactions):
+    if interactions.empty:
+        return pd.DataFrame()
+    return interactions.pivot_table(
+        index="user_id", columns="item_id", values="score", fill_value=0
+    )
 
 
-def calculate_user_similarity(user_item_matrix):
-    # cosine similarity with numpy
-    mat = user_item_matrix.values.astype(float)
-    norms = np.linalg.norm(mat, axis=1)
-    # avoid division by zero
-    norms[norms == 0] = 1.0
-    sim = (mat @ mat.T) / (norms[:, None] * norms[None, :])
-    return pd.DataFrame(sim, index=user_item_matrix.index, columns=user_item_matrix.index)
+# --------------------------------------------------
+# STEP 3: Generate recommendations
+# --------------------------------------------------
+def get_recommendations(user_id, user_item_matrix, top_n=5):
+    """
+    Recommend items for a given user.
 
+    Args:
+        user_id (int): Target user
+        user_item_matrix (pd.DataFrame): User-item matrix
+        top_n (int): Number of recommendations
 
-def recommend_items_for_user(user_id, user_similarity, user_item_matrix, top_n=5):
-    if user_id not in user_item_matrix.index:
+    Returns:
+        list of item_ids
+    """
+    if user_item_matrix.empty or user_id not in user_item_matrix.index:
         return []
-    sims = user_similarity.loc[user_id]
-    weighted_scores = user_item_matrix.T.dot(sims)
-    already = set(user_item_matrix.loc[user_id][user_item_matrix.loc[user_id] > 0].index)
-    recommendations = weighted_scores.drop(labels=list(already), errors="ignore")
+
+    # Compute similarity
+    similarity = cosine_similarity(user_item_matrix)
+    similarity_df = pd.DataFrame(
+        similarity, index=user_item_matrix.index, columns=user_item_matrix.index
+    )
+
+    # Get top similar users
+    similar_users = similarity_df[user_id].drop(user_id).sort_values(ascending=False)
+
+    if similar_users.empty:
+        return []
+
+    # Weighted scores from similar users
+    user_scores = user_item_matrix.loc[similar_users.index].T.dot(similar_users)
+
+    # Remove already interacted items
+    interacted_items = set(user_item_matrix.loc[user_id][user_item_matrix.loc[user_id] > 0].index)
+    recommendations = user_scores.drop(labels=interacted_items, errors="ignore")
+
+    # Top N
     return recommendations.sort_values(ascending=False).head(top_n).index.tolist()
-
-# Example usage (from your script)
-user_favorites = [
-    {"user_id": 1, "item_id": 1, "type": "destination"},
-    {"user_id": 1, "item_id": 10, "type": "place"},
-    {"user_id": 2, "item_id": 2, "type": "destination"},
-]
-
-user_ratings = [
-    {"user_id": 1, "item_id": 10, "rating": 5},
-    {"user_id": 2, "item_id": 11, "rating": 4},
-]
-
-destination_links = {
-    1: ["place_10", "hotel_2", "activity_3"],
-    2: ["place_11", "food_5"]
-}
-
-df = build_interactions(user_favorites, user_ratings, destination_links)
-uim = build_user_item_matrix(df)
-sim = calculate_user_similarity(uim)
-recs = recommend_items_for_user(1, sim, uim, top_n=3)
-
-import caas_jupyter_tools as tools
-tools.display_dataframe_to_user("Interactions", df)
-tools.display_dataframe_to_user("User-Item Matrix", uim)
-tools.display_dataframe_to_user("User Similarity", sim)
-
-print("Recommendations for User 1:", recs)

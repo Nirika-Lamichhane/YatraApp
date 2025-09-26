@@ -6,6 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
+# -------------------- rating model -------------------
+from .models import Rating
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Avg
+from rest_framework.views import APIView
+from rest_framework import status,permissions
+
 # -------------------Accounts app imports -------------------
 from accounts.models import Destination, DestinationType
 
@@ -63,6 +70,43 @@ class CommentViewSet(viewsets.ModelViewSet):
         # Automatically attach the logged-in user to the comment
         serializer.save(user=self.request.user)
 
+# ------------------- Rating API -------------------#
+
+class SubmitRatingView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        """
+        Generic endpoint for submitting rating for any model:
+        POST body: {
+            "model": "place",  # "hotel", "food", "activity"
+            "object_id": 3,
+            "rating": 4.5
+        }
+        """
+        user = request.user
+        model_name = request.data.get('model')
+        object_id = request.data.get('object_id')
+        rating_value = request.data.get('rating')
+
+        if not model_name or not object_id or not rating_value:
+            return Response({"error": "model, object_id, and rating are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get content type dynamically
+        try:
+            content_type = ContentType.objects.get(model=model_name)
+        except ContentType.DoesNotExist:
+            return Response({"error": "Invalid model name"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Update or create the rating
+        rating_obj, created = Rating.objects.update_or_create(
+            user=user,
+            content_type=content_type,
+            object_id=object_id,
+            defaults={'rating': rating_value}
+        )
+
+        return Response({"message": "Rating submitted successfully"}, status=status.HTTP_200_OK)
 
 # ------------------- Recommendation API -------------------
 

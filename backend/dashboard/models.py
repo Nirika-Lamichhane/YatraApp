@@ -127,6 +127,8 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.user} on {self.content_object}"
 
+#  generic rating model
+
 class Rating(models.Model):
 
     # this is used to link the rating to a user who gave the rating 
@@ -140,7 +142,7 @@ class Rating(models.Model):
 
     object_id= models.PositiveIntegerField()  # stores the primary key of the model instance
 
-    content_object= GenericForeignKey('content_type', 'object_id') 
+    content_object= GenericForeignKey('content_type', 'object_id') # allows a rating to belong to any model
 
     rating= models.FloatField() # stores the actual rating value the user gave
 

@@ -128,14 +128,23 @@ class Comment(models.Model):
         return f"Comment by {self.user} on {self.content_object}"
 
 class Rating(models.Model):
+
+    # this is used to link the rating to a user who gave the rating 
+    # the syntax settings.AUTH_USER_MODEL is used to refer to the use of the user model defined in auth_user_model of the settings.py
+    # cascade means if the user is deleted then all the ratings given by that user will also be deleted
+
     user= models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # generic link to place hotel food and activity
-    content_type= models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id= models.PositiveIntegerField()
-    content_object= GenericForeignKey('content_type', 'object_id')
-    rating= models.FloatField()
-    created_at= models.DateTimeField(auto_now_add=True)
+    content_type= models.ForeignKey(ContentType, on_delete=models.CASCADE) # stores the model type
+
+    object_id= models.PositiveIntegerField()  # stores the primary key of the model instance
+
+    content_object= GenericForeignKey('content_type', 'object_id') 
+
+    rating= models.FloatField() # stores the actual rating value the user gave
+
+    created_at= models.DateTimeField(auto_now_add=True) # stores the timestamp when the rating was created
 
     class Meta:
         unique_together = ('user', 'content_type', 'object_id')

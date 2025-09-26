@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Avg
 from .models import Place, Hotel, Food, Activity, Favorite, Comment
 
 class PlaceSerializer(serializers.ModelSerializer):

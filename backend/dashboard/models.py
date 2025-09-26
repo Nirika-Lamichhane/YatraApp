@@ -8,7 +8,7 @@ class Place(models.Model):
     name = models.CharField(max_length=100)
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
-    rating= models.FloatField(default=0.0)
+    avg_rating= models.FloatField(default=0.0)
     image = models.ImageField(upload_to='places/', null=True, blank=True)
 
     def __str__(self):
@@ -28,7 +28,7 @@ class Hotel(models.Model):
     name = models.CharField(max_length=100)
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     price_range = models.FloatField(default=100.0)
-    rating = models.FloatField(default=0.0)
+    avg_rating = models.FloatField(default=0.0)
     image = models.ImageField(upload_to='hotels/', null=True, blank=True)
     description = models.TextField(blank=True)  # Add description field for UI
 
@@ -50,7 +50,7 @@ class Food(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     type = models.CharField(max_length=50)
     price_range = models.FloatField(default=100.0)
-    rating = models.FloatField(default=0.0)
+    avg_rating = models.FloatField(default=0.0)
     image = models.ImageField(upload_to='foods/', null=True, blank=True)
     description = models.TextField(blank=True)  # Add description field for UI
 
@@ -72,7 +72,7 @@ class Activity(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     duration = models.CharField(max_length=50)
     price_range = models.FloatField(default=100.0)
-    rating = models.FloatField(default=0.0)
+    avg_rating = models.FloatField(default=0.0)
     image = models.ImageField(upload_to='activities/', null=True, blank=True)
     description = models.TextField(blank=True)  # Add description field for UI
 
@@ -126,3 +126,19 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.user} on {self.content_object}"
+
+class Rating(models.Model):
+    user= models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    # generic link to place hotel food and activity
+    content_type= models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id= models.PositiveIntegerField()
+    content_object= GenericForeignKey('content_type', 'object_id')
+    rating= models.FloatField()
+    created_at= models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'content_type', 'object_id')
+    
+    def __str__(self):
+        return f"Rating by {self.user} on {self.content_object}: {self.rating}"

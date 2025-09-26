@@ -11,7 +11,7 @@ class PlaceSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Place
-        fields = ['id', 'name', 'destination', 'description', 'image','avg_rating','favorites_count', 'comments_count']
+        fields = ['id', 'name', 'destination', 'description', 'image','average_rating','favorites_count', 'comments_count']
 
     def get_average_rating(self, obj):
        content_type = ContentType.objects.get_for_model(obj)
@@ -28,7 +28,7 @@ class HotelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Hotel
-        fields = ['id', 'name', 'place', 'price_range', 'avg_rating', 'image', 'description','price_range', 'favorites_count', 'comments_count']
+        fields = ['id', 'name', 'place', 'price_range', 'average_rating', 'image', 'description','price_range', 'favorites_count', 'comments_count']
 
     def get_average_rating(self, obj):
           content_type = ContentType.objects.get_for_model(obj)
@@ -40,10 +40,11 @@ class HotelSerializer(serializers.ModelSerializer):
 class FoodSerializer(serializers.ModelSerializer):
     favorites_count = serializers.IntegerField(read_only=True)
     comments_count = serializers.IntegerField(read_only=True)
+    average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Food
-        fields = ['id', 'name', 'place', 'type', 'image', 'avg_rating','price_range','description', 'favorites_count', 'comments_count']
+        fields = ['id', 'name', 'place', 'type', 'image', 'average_rating','price_range','description', 'favorites_count', 'comments_count']
 
     def get_average_rating(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
@@ -55,10 +56,11 @@ class FoodSerializer(serializers.ModelSerializer):
 class ActivitySerializer(serializers.ModelSerializer):
     favorites_count = serializers.IntegerField(read_only=True)
     comments_count = serializers.IntegerField(read_only=True)
+    average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Activity
-        fields = ['id', 'name', 'place', 'duration', 'image', 'avg_rating' ,'price_range','description', 'favorites_count', 'comments_count']
+        fields = ['id', 'name', 'place', 'duration', 'image','price_range','average_rating','description', 'favorites_count', 'comments_count']
 
     def get_average_rating(self, obj):
         content_type = ContentType.objects.get_for_model(obj)

@@ -7,12 +7,23 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'phone_number', 'profile_photo', 'citizenship_photo', 'password', 'role']
+        fields = ['id', 'username', 'email', 'phone_number', 'profile_photo', 'citizenship_number', 'password', 'role']
         extra_kwargs = {
             'password': {'write_only': True},
             'profile_photo': {'required': True},
-            'citizenship_photo': {'required': True},
+            'citizenship_number': {'required': False},
         }
+
+    # custom validation for the role
+    def validate(self, data):
+        role = data.get('role')
+        citizenship_number = data.get('citizenship_number')
+
+        if role == 'guide' and not citizenship_number:
+            raise serializers.ValidationError({
+                'citizenship_number': 'This field is required for guides.'
+            })
+        return data
 
     def create(self, validated_data):
         role = validated_data.pop('role')

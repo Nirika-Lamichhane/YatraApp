@@ -28,19 +28,9 @@ class RegisterAPIView(APIView):
     permission_classes = [permissions.AllowAny]  # anyone can register
 
     def post(self, request):
-        data = request.data.copy()  # mutable copy of incoming data
-
-        # Validate required files in request.FILES
-        profile_photo = request.FILES.get('profile_photo')
-
-        if not profile_photo:
-            return Response({'profile_photo': ['This field is required.']}, status=status.HTTP_400_BAD_REQUEST)
         
 
-        # Save the files to request.data for serializer
-        data['profile_photo'] = profile_photo
-
-        serializer = CustomUserSerializer(data=data)
+        serializer = CustomUserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
 

@@ -39,12 +39,13 @@ class CustomUser(AbstractUser):
     phone_number = models.CharField(_('phone number'), max_length=15)
     profile_photo = models.ImageField(_('profile photo'), upload_to=user_profile_path)
 
-    citizenship_number =models.CharField(_('citizenship number'), max_length=50, blank=True)
+    citizenship_number =models.CharField(_('citizenship number'), max_length=50, blank=True, null=True)
 
 
 
     favorites = models.ManyToManyField(Destination, blank=True, related_name='favorited_by')
     ROLE_CHOICES=[
+
     (
         'user','Normal User'
     ),

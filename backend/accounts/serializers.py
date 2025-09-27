@@ -1,9 +1,27 @@
 from rest_framework import serializers
 from .models import CustomUser, DestinationType, Destination
+from rest_framework.validators import UniqueValidator
+from django.contrib.auth.models import Group
 
 class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     role =serializers.ChoiceField(choices=CustomUser.ROLE_CHOICES, required=True)
+
+
+      # Unique fields
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=CustomUser.objects.all(), message="This email is already registered.")]
+    )
+    phone_number = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=CustomUser.objects.all(), message="This phone number is already registered.")]
+    )
+    citizenship_number = serializers.CharField(
+        required=False,  # Only required for guides
+        allow_blank=True
+    )
+
 
     class Meta:
         model = CustomUser
@@ -34,7 +52,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user.save()
 
         # assign to group automatically based on role for permissions
-        from django.contrib.auth.models import Group
         if role == 'guide':
             group = Group.objects.get(name='Tour Guide')
         else:

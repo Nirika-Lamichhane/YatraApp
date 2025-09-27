@@ -35,11 +35,11 @@ class Destination(models.Model):
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(_('email address'), blank=True)
-    phone_number = models.CharField(_('phone number'), max_length=15)
+    email = models.EmailField(_('email address'), blank=True, unique=True)
+    phone_number = models.CharField(_('phone number'), max_length=15, unique=True)
     profile_photo = models.ImageField(_('profile photo'), upload_to=user_profile_path)
 
-    citizenship_number =models.CharField(_('citizenship number'), max_length=50, blank=True, null=True)
+    citizenship_number =models.CharField(_('citizenship number'), max_length=50, blank=True, null=True, unique=True)
 
 
 

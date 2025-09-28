@@ -56,7 +56,10 @@ def get_destination_types(request):
 @api_view(['GET'])
 def get_destinations_by_types(request):
     type_ids = request.query_params.getlist('type_ids')  # e.g. ?type_ids=1&type_ids=2
-    destinations = Destination.objects.filter(type__id__in=type_ids)
+    if type_ids:
+        destinations = Destination.objects.filter(type__id__in=type_ids)
+    else:
+        destinations = Destination.objects.all()  # Return all if no filter
     serializer = DestinationSerializer(destinations, many=True)
     return Response(serializer.data)
 

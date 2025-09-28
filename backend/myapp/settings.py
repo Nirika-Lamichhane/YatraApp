@@ -155,7 +155,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'ROTATE_REFRESH_TOKENS': True, # issue new refresh token when the old one is used
+    'BLACKLIST_AFTER_ROTATION': True,   # add old refresh tokens to blacklist after logout
     'AUTH_HEADER_TYPES': ('Bearer',),
 }

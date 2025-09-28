@@ -7,7 +7,8 @@ from accounts.views import RegisterAPIView # ✅ Import the registration view
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
-    TokenBlacklistView,
+    TokenBlacklistView,     
+    TokenVerifyView
 )
 
 urlpatterns = [
@@ -24,7 +25,9 @@ urlpatterns = [
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Refresh token
-    # path('api/token/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),  # Logout (optional)
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # Verify token check if the token is valid or not from flutter
+    path('api/token/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),  # Logout (optional) this removes all fresh token after logout
+    
 
     path('api/dashboard/', include('dashboard.urls')),  # Include the dashboard app URLs
 ]

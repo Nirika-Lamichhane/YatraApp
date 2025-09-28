@@ -71,11 +71,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class DestinationTypeSerializer(serializers.ModelSerializer):
-    icon=serializers.ImageField(required=True)
 
     class Meta:
         model = DestinationType
-        fields = ['id', 'name', 'icon']
+        fields = ['id', 'name']
 
 class DestinationSerializer(serializers.ModelSerializer):
     class Meta:

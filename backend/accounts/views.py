@@ -63,6 +63,15 @@ def get_destinations_by_types(request):
     serializer = DestinationSerializer(destinations, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def get_destination_detail(request, pk):
+    try:
+        destination = Destination.objects.get(pk=pk)
+    except Destination.DoesNotExist:
+        return Response({'detail': 'Not found.'}, status=404)
+    serializer = DestinationSerializer(destination)
+    return Response(serializer.data)
+
 
 ''' 
  this favroites is for the destination as destination tyoes is drop down and according to that
@@ -74,9 +83,21 @@ def get_destinations_by_types(request):
 def submit_favorite_destinations(request):
     user = request.user
     destination_ids = request.data.get('destination_ids', [])
-    destinations = Destination.objects.filter(id__in=destination_ids)
-    user.favorites.set(destinations)
-    user.save()
+
+    if not destination_ids:
+        return Response({"message": "No destinations selected"}, status=400)
+
+    for dest_id in destination_ids:
+        try:
+            destination = Destination.objects.get(id=dest_id)
+        except Destination.DoesNotExist:
+            continue  # skip invalid IDs
+
+        if destination in user.favorites.all():
+            user.favorites.remove(destination)  # remove if already favorited
+        else:
+            user.favorites.add(destination)     # add if not favorited
+
     return Response({"message": "Favorites updated successfully"})
 
 
@@ -84,7 +105,8 @@ def submit_favorite_destinations(request):
 @permission_classes([IsAuthenticated])
 def get_user_favorites(request):
     user = request.user
-    serializer = CustomUserSerializer(user)
+    favorites = user.favorites.all()  # get favorite destinations
+    serializer = DestinationSerializer(favorites, many=True)
     return Response(serializer.data)
 
 

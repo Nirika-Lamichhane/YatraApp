@@ -71,12 +71,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class DestinationTypeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = DestinationType
         fields = ['id', 'name']
 
 class DestinationSerializer(serializers.ModelSerializer):
+    type = DestinationTypeSerializer()  # nest the serializer
+
     class Meta:
         model = Destination
         fields = '__all__'

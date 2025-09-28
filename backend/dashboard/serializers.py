@@ -75,7 +75,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = ['id', 'user', 'content_type', 'object_id', 'content_object', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        read_only_fields = ['id', 'user','created_at']
 
     def get_content_object(self, obj):
         return str(obj.content_object)
@@ -86,7 +86,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'user', 'content_type', 'object_id', 'content_object', 'content', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        read_only_fields = ['id','user', 'created_at']
 
     def get_content_object(self, obj):
         return str(obj.content_object)

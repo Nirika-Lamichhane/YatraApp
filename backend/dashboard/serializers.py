@@ -92,3 +92,4 @@ class CommentSerializer(serializers.ModelSerializer):
         return str(obj.content_object)
     
 # the urls and apis are tested using postman
+#  returned back after dashain and being sick planning on making the chatbot and making the frontend using flutter

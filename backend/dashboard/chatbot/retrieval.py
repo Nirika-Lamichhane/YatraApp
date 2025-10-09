@@ -25,6 +25,8 @@ def retrieve_destinations(destination_type_name=None, limit=10):
     
     if destination_type_name:
         destinations = destinations.filter(type__name__iexact=destination_type_name)
+
+        # iexact is case insensitive exact match
     
     return destinations.order_by('name')[:limit]
 

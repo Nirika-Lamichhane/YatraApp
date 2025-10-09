@@ -7,7 +7,7 @@ from dashboard.models import Place, Hotel, Food, Activity
 # -----------------------
 # DestinationType Retrieval
 # -----------------------
-def retrieve_destination_types(limit=10):
+def retrieve_destination_types(limit=10): # this limits the types to only 10 so as not much data is sent to gpt but i have total 5 so its okay
     """
     Retrieve all destination types, optionally limited
     """

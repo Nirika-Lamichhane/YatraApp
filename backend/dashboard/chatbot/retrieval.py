@@ -31,22 +31,31 @@ def retrieve_destinations(destination_type_name=None, limit=10):
     return destinations.order_by('name')[:limit]
 
 
-# -----------------------
-# Place Retrieval
-# -----------------------
-def retrieve_places(destination_name=None, min_rating=None, limit=5):
+def retrieve_places(destination_name=None, min_rating=None, limit=10):
     """
-    Retrieve places optionally filtered by destination and minimum rating
+    Retrieve places optionally filtered by destination and minimum rating.
+    Handles both cases:
+    - specific rating queries
+    - vague 'best place' queries
     """
     places = Place.objects.all()
-    
+
+    # Filter by destination name if provided
     if destination_name:
         places = places.filter(destination__name__iexact=destination_name)
-    
+
+    # Filter by minimum rating if provided (e.g. "places with 4 stars")
     if min_rating:
         places = places.filter(avg_rating__gte=min_rating)
-    
-    return places.order_by('-avg_rating')[:limit]
+
+    # If rating data exists, sort by it; otherwise by name
+    if 'avg_rating' in [f.name for f in Place._meta.fields]:
+        places = places.order_by('-avg_rating')
+    else:
+        places = places.order_by('name')
+
+    # Return top few results
+    return places[:limit]
 
 
 # -----------------------

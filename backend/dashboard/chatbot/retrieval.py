@@ -71,7 +71,7 @@ def retrieve_hotels(place_name=None, max_price=None, min_rating=None, limit=5):
         hotels = hotels.filter(place__name__iexact=place_name)
     
     if max_price:
-        hotels = hotels.filter(price_range__lte=max_price)
+        hotels = hotels.filter(price_range__lte=max_price) # lte means less than or equal to
     
     if min_rating:
         hotels = hotels.filter(avg_rating__gte=min_rating)

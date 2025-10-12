@@ -147,4 +147,8 @@ def handle_query(query):
         return format_activities(activities)
     
     else:
-        return "Sorry, I can only answer travel-related questions about destinations, places, hotels, foods, and activities."
+        return (
+        " Sorry, I couldn’t understand your request. "
+        "For more information or specific queries, please contact us at "
+        "support@yatraapp.com or founders@yatraapp.com."
+    )

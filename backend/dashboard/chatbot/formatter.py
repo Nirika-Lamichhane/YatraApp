@@ -84,3 +84,4 @@ def format_destination_types(types):
     for i, t in enumerate(types, 1):
         message += f"{i}. {t.name}\n"
     return message
+print("formatter.py loaded successfully")

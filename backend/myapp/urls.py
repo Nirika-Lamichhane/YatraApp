@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # Verify token check if the token is valid or not from flutter
     path('api/token/logout/', TokenBlacklistView.as_view(), name='token_blacklist'),  # Logout (optional) this removes all fresh token after logout
     
+    path('api/', include('dashboard.chatbot.urls')),  # now your chatbot API is at /api/chatbot/
 
     path('api/dashboard/', include('dashboard.urls')),  # Include the dashboard app URLs
 ]

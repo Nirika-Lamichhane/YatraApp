@@ -17,4 +17,4 @@ def chatbot_api(request):
     # Return as JSON
     return Response({"response": bot_response})
 
-printf( " hello this is me in october 16 morning after completing some task of week 1 of module 1 of Aspire leadership.")
+print( " hello this is me in october 16 morning after completing some task of week 1 of module 1 of Aspire leadership.")

@@ -18,3 +18,4 @@ def chatbot_api(request):
     return Response({"response": bot_response})
 
 print( " hello this is me in october 16 morning after completing some task of week 1 of module 1 of Aspire leadership.")
+print(" this day bhugol came and the day just passed by doing nothing")

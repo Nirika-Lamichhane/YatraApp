@@ -20,3 +20,5 @@ def chatbot_api(request):
 print( " hello this is me in october 16 morning after completing some task of week 1 of module 1 of Aspire leadership.")
 print(" this day bhugol came and the day just passed by doing nothing")
 print(" it is october 17 and its 12:29pm now and we just had lunch and i also had sugarcane.")
+print(" this is me at 2:13 after completing week 1 of module 1 after identifying what are my characters and how can i refine them ")
+print(" i also identify my goals and how can i acheive these goals ")

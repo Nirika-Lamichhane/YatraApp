@@ -17,12 +17,4 @@ def chatbot_api(request):
     # Return as JSON
     return Response({"response": bot_response})
 
-print( " hello this is me in october 16 morning after completing some task of week 1 of module 1 of Aspire leadership.")
-print(" this day bhugol came and the day just passed by doing nothing")
-print(" it is october 17 and its 12:29pm now and we just had lunch and i also had sugarcane.")
-print(" this is me at 2:13 after completing week 1 of module 1 after identifying what are my characters and how can i refine them ")
-print(" i also identify my goals and how can i acheive these goals ")
-print(" i texted to kec ieee and asked them about ieeextreme ")
-print("my proctor just declined me and i couldnot even get participation certificate if i even registered so i again texted them whom i texted yesterday for teams. ")
-print(" i am feeling so anxious and sad about the fact whether will i get any team or not and whether will i bbe able to participate in it or not. ")
-print(" just registered for the EBCC business competition to learn more about business and startup competition. ")
+print( " hi nirika lamichhane can do everything in life by managing time and respecting others time as well. ")

@@ -18,3 +18,4 @@ def chatbot_api(request):
     return Response({"response": bot_response})
 
 print( " hi nirika lamichhane can do everything in life by managing time and respecting others time as well. ")
+print(" now i will sleep goodnight")

@@ -85,3 +85,6 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 print("formatter.py loaded successfully")
+
+
+print(" heyyy hlooo ")

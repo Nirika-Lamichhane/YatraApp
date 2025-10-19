@@ -17,7 +17,6 @@ def chatbot_api(request):
     # Return as JSON
     return Response({"response": bot_response})
 
-print( " hi nirika lamichhane can do everything in life by managing time and respecting others time as well. ")
-print(" now i will sleep goodnight")
 
 print( "  back with my aspire module and posted the feedback on my professional objectives. ")
+print(" i am currently watching the pre master class materials for the master class which is uspposed to be at oct 23rd on the day of tihar bhaitika")

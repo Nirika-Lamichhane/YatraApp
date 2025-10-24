@@ -87,8 +87,5 @@ def format_destination_types(types):
 print("formatter.py loaded successfully")
 
 
-print(" heyyy hlooo ")
-print(" my babyyyy is lit and i am a baby myself hehe")
-print(" its tihar day after tomorrow and then i have to go ktm for the hackathon. hope everything will go well")
-print( " watched the yesterdays session of aspire")
-print(" just realized i might be the only 1 in my team")
+
+print( " hi after tihar and its 5:01 pm right now.")

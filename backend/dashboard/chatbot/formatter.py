@@ -84,15 +84,3 @@ def format_destination_types(types):
     for i, t in enumerate(types, 1):
         message += f"{i}. {t.name}\n"
     return message
-print("formatter.py loaded successfully")
-
-
-
-print( " hi after tihar and its 5:01 pm right now.")
-
-print( " my progress only labeled as 83 percent in module 1")
-print( " tomorrow is the big day for me as i have hackathon tomorrow. ")
-print( " todays meeting room went so well for me.")
-print( "learnt a lot today in the meeting.")
-print( " i am doing the hackathon on my own as i am the onlly one in my team. ")
-print(" its goling well as i have been within 1000 i.e. 500 to 700 rank in 8916")

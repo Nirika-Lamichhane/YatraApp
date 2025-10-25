@@ -84,3 +84,5 @@ def format_destination_types(types):
     for i, t in enumerate(types, 1):
         message += f"{i}. {t.name}\n"
     return message
+
+print( " i got down by 1 rank in ieee nepal and the issue is that my score along with others is also going down and continuously changing.")

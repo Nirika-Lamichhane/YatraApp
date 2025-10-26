@@ -85,3 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
+print( " all the bus tickets were sold as it is after tihar and tomorrow is chatth.")

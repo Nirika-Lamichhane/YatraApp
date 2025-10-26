@@ -85,6 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print( " i got down by 1 rank in ieee nepal and the issue is that my score along with others is also going down and continuously changing.")
-print(" woke up at 4 am to do the task in hackathon and did it and its 4:49 am and the all the task till now is done and hackathon will end in 5:40 am")
-print(" this is me nirika and contest ended. ")
+print("  i am back as tomoroow i am going ktm and i am prepraeing things now. ")

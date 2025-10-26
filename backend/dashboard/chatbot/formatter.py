@@ -85,4 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print("  i am back as tomoroow i am going ktm and i am prepraeing things now. ")

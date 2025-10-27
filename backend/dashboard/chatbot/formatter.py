@@ -85,3 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
+print( " hult prizeeeee lets gooooo and make it. ")

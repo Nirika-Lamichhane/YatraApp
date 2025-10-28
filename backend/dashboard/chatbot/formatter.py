@@ -87,3 +87,4 @@ def format_destination_types(types):
 
 print( " i slept all day and woke up and had chauchau and i did learnt about 15 ways of growth minddet and learnt about how to face challenges")
 print( " watching yesterdays masterclass recording.")
+print ( " electricity is gone again and i made a plan on what what to do.")

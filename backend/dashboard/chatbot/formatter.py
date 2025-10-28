@@ -85,5 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print( " hult prizeeeee lets gooooo and make it. ")
-print(" today i told auntie about my inconvience with preeti. ")
+print( " i slept all day and woke up and had chauchau and i did learnt about 15 ways of growth minddet and learnt about how to face challenges")

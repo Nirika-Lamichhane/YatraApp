@@ -85,3 +85,5 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
+print(" completed chapter 1 2 5 6 till now of graphics and its the forst day today.")
+print(" also messaged the hr for django intern")

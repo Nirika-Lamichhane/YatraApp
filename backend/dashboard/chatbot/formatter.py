@@ -87,3 +87,4 @@ def format_destination_types(types):
 
 print(" completed chapter 1 2 5 6 till now of graphics and its the forst day today.")
 print(" also messaged the hr for django intern")
+print(" i have been reading about graphics and completed chapter 3 theory will complete the remaining till 12.")

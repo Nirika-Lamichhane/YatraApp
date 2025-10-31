@@ -86,3 +86,4 @@ def format_destination_types(types):
     return message
 
 print(" last day of preparation for the graphics exam. woke up at 7:17 around and its 7:34 right now.")
+print(" got freshed and its 7:44 now had to write my daily schedule but couldnot due to the busziness.")

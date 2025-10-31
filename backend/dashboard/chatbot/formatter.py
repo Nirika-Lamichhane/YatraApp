@@ -84,3 +84,5 @@ def format_destination_types(types):
     for i, t in enumerate(types, 1):
         message += f"{i}. {t.name}\n"
     return message
+
+print(" last day of preparation for the graphics exam. woke up at 7:17 around and its 7:34 right now.")

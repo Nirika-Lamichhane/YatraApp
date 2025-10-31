@@ -90,3 +90,4 @@ print(" got freshed and its 7:44 now had to write my daily schedule but couldnot
 print(" i had lunch and i am talking with my mom and its 9:24 am now. ")
 print( " its 10:52 am now i have completed 1 and half question papers since morning. ")
 print(" its 5:15 nowwwwww ")
+print(" its 7:49 now and i had dinner and talked with mom. ")

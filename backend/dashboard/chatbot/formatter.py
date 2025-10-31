@@ -85,9 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print(" last day of preparation for the graphics exam. woke up at 7:17 around and its 7:34 right now.")
-print(" got freshed and its 7:44 now had to write my daily schedule but couldnot due to the busziness.")
-print(" i had lunch and i am talking with my mom and its 9:24 am now. ")
-print( " its 10:52 am now i have completed 1 and half question papers since morning. ")
-print(" its 5:15 nowwwwww ")
-print(" its 7:49 now and i had dinner and talked with mom. ")

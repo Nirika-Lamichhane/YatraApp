@@ -85,3 +85,5 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
+
+print(" this is me after exm and even though my ecams are good enough i am manifesting to top this exam as well with any marks.")

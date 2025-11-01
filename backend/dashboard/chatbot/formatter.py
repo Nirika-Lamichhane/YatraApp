@@ -87,3 +87,4 @@ def format_destination_types(types):
 
 
 print(" this is me after exm and even though my ecams are good enough i am manifesting to top this exam as well with any marks.")
+print(" i am memorizing and manidesting myself as the one toping this semester as well ")

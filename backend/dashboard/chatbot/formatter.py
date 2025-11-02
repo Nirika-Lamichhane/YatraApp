@@ -87,3 +87,4 @@ def format_destination_types(types):
 
 
 print(" this is the first day of prep for english and today i woke up and had linch and research about everything i have screenchpoted")
+print(" i have been chilling and its 12:43 right noe")

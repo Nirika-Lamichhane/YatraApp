@@ -85,6 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-
-print(" this is the first day of prep for english and today i woke up and had linch and research about everything i have screenchpoted")
-print(" i have been chilling and its 12:43 right noe")

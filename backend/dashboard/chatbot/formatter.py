@@ -85,3 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
+print(" its the second day of preparation for exam and now i am going to prepare for that from today")

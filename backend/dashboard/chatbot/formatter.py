@@ -86,3 +86,4 @@ def format_destination_types(types):
     return message
 
 print(" its the second day of preparation for exam and now i am going to prepare for that from today")
+print(" i read till 1:41 and then came to my room and its 4:19 now watched young sheldon till now")

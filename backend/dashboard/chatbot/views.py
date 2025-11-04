@@ -18,3 +18,4 @@ def chatbot_api(request):
     return Response({"response": bot_response})
 
 print(" its 1:43 now and i am going to research about IEEEXtreme environment and all. ")
+print(" its the november 4 last day for exam prep of english and its 3 09 now")

@@ -85,4 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print(" this is me after english exam and i did good enough but not great. ")
+print(" trying to transfer photos from phone to pc. ")

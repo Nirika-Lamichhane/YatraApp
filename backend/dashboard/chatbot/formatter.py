@@ -85,6 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print(" its the second day of preparation for exam and now i am going to prepare for that from today")
-print(" i read till 1:41 and then came to my room and its 4:19 now watched young sheldon till now")
-print(" bought a pant worth 750 and its good enough to wear to college. ")

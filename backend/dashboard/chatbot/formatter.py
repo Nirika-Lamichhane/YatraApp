@@ -86,3 +86,4 @@ def format_destination_types(types):
     return message
 
 print(" first day of prep of coa exam i.e. second last exam. ")
+print(" i am studying coa from 10 am and its 10 am right noe. charging isnot happening in this room cause of the plucks ")

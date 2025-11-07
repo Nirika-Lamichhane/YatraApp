@@ -85,7 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print(" first day of prep of coa exam i.e. second last exam. ")
-print(" i am studying coa from 10 am and its 10 am right noe. charging isnot happening in this room cause of the plucks ")
-print(" its second day and i am trying to study as its 7:46 am now. ")
-print(" its 1:38 pm now and i completed chp 7 and 6 till now ")

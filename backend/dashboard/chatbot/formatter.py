@@ -85,3 +85,5 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
+
+print(" its 4:06 now and i completed chp 5 6 7 8 till now. ")

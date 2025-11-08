@@ -85,7 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-
-print(" its 4:06 now and i completed chp 5 6 7 8 till now. ")
-print(" i slept at 1 arpund and i had completed chp 1 2 5 6 7 8 till now. ")
-print(" its third day of prep and its 8:15 now")

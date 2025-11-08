@@ -85,5 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print(" hello completed chp 3 as well")
-print(" i had khaja as momo and current and its 4:51 pm now. ")

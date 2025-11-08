@@ -85,3 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
+print(" hello completed chp 3 as well")

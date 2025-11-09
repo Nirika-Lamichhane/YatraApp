@@ -85,4 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print("its the exam day and its 7:40 right now, i woke up at 7:11 am today.")
+print("hey my cutie")

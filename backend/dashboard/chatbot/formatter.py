@@ -86,3 +86,4 @@ def format_destination_types(types):
     return message
 
 print("hey my cutie")
+print(" i already came from exam and started watching movie and its 5:42 pm now")

@@ -89,3 +89,5 @@ def format_destination_types(types):
 print("hey my cutie")
 print(" i already came from exam and started watching movie and its 5:42 pm now")
 '''
+
+print( " its the first day of preparation for the dc exam but today i read 5 pages and went to avinash house to bring my shoes ")

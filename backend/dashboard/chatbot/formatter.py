@@ -88,3 +88,4 @@ def format_destination_types(types):
 
 print(" hey its second day and till now i have completed chp 5 and 3 and its 9:06 am right now and its the second day of 5 days intensice ai agent course. ")
 print(" yesterday was only 2 commits i guess ")
+print(" its 1:16 pm and i completed chapter 8 and had chatpat till now")

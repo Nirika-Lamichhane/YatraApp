@@ -84,3 +84,6 @@ def format_destination_types(types):
     for i, t in enumerate(types, 1):
         message += f"{i}. {t.name}\n"
     return message
+
+
+print(" hey its second day and till now i have completed chp 5 and 3 and its 9:06 am right now and its the second day of 5 days intensice ai agent course. ")

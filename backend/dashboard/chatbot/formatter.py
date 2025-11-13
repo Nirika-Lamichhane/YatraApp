@@ -85,10 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-'''
-print(" hey its second day and till now i have completed chp 5 and 3 and its 9:06 am right now and its the second day of 5 days intensice ai agent course. ")
-print(" yesterday was only 2 commits i guess ")
-print(" its 1:16 pm and i completed chapter 8 and had chatpat till now")
-'''
-print(" its the third day and its 7:58 am and now i have completed all chapters sarra and have to read again.")
-print(" its 1:46 pm now and i have rested from 11:56 and i had badam, chauchau and alpenlibi lolipop")

@@ -85,4 +85,3 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print(" this is me after the completion of the exam of 5th semester")

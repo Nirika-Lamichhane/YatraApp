@@ -121,3 +121,4 @@ def retrieve_activities(place_name=None, activity_type=None, min_rating=None, li
     return activities.order_by('-avg_rating')[:limit]
 
 print(" this is retrieval file ")
+print(' i am watching strangers things season 1 episode 5 right now')

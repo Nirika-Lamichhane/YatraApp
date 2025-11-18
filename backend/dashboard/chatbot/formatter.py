@@ -85,4 +85,4 @@ def format_destination_types(types):
         message += f"{i}. {t.name}\n"
     return message
 
-print(" exam done and its the next day of last exam nov 14 and i have a lots of thing to do but today i am going out with avinash")
+print(" its nov 11:12 am and now i have completed making the video of the EBCC 2025 and submitted through mail.")

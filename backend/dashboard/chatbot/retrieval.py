@@ -119,3 +119,4 @@ def retrieve_activities(place_name=None, activity_type=None, min_rating=None, li
         activities = activities.filter(avg_rating__gte=min_rating)
     
     return activities.order_by('-avg_rating')[:limit]
+print(" hello i am back to maintain the streak. ")

@@ -120,3 +120,5 @@ def retrieve_activities(place_name=None, activity_type=None, min_rating=None, li
     
     return activities.order_by('-avg_rating')[:limit]
 print(" hello i am back to maintain the streak. ")
+
+print(" its irregular right? its nov 27 today")

@@ -32,24 +32,52 @@ from .ml.collaborative import build_interactions, create_user_item_matrix, calcu
 # ------------------- CRUD APIs -------------------
 
 class PlaceViewSet(viewsets.ModelViewSet):
-    queryset = Place.objects.all()
     serializer_class = PlaceSerializer
+    
+    def get_queryset(self):
+        """Filter Places by the Destination ID provided in the URL"""
+        queryset = Place.objects.all()
+        dest_id = self.request.query_params.get('dest_id')
+        if dest_id:
+            queryset = queryset.filter(destination_id=dest_id)
+        return queryset
 
 
 class HotelViewSet(viewsets.ModelViewSet):
-    queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
+    
+    def get_queryset(self):
+        """Filter Hotels by Destination (via the Place relationship)"""
+        queryset = Hotel.objects.all()
+        dest_id = self.request.query_params.get('dest_id')
+        if dest_id:
+            # We filter through the 'place' foreign key to get to 'destination'
+            queryset = queryset.filter(place__destination_id=dest_id)
+        return queryset
 
 
 class FoodViewSet(viewsets.ModelViewSet):
-    queryset = Food.objects.all()
     serializer_class = FoodSerializer
+    
+    def get_queryset(self):
+        """Filter Food by Destination (via the Place relationship)"""
+        queryset = Food.objects.all()
+        dest_id = self.request.query_params.get('dest_id')
+        if dest_id:
+            queryset = queryset.filter(place__destination_id=dest_id)
+        return queryset
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
-    queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-
+    
+    def get_queryset(self):
+        """Filter Activities by Destination (via the Place relationship)"""
+        queryset = Activity.objects.all()
+        dest_id = self.request.query_params.get('dest_id')
+        if dest_id:
+            queryset = queryset.filter(place__destination_id=dest_id)
+        return queryset
 
 class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
@@ -117,10 +145,9 @@ def recommend_view(request):
    user_id=request.user.id
    # load all data from db to dataframes
    destinations, destination_types,places_df, activities_df, foods_df, hotels_df, user_interactions = load_all_data()
+   destination_id = request.GET.get("dest_id") or request.GET.get("destination_id")
+   item_type = request.GET.get("item_type", "places")
 
-   # we have to choose which to cluster in the dashboard
-   item_type = request.GET.get("item_type", "places")  # default = places
-   destination_id = request.GET.get("destination_id", None)
 
    if not destination_id:
        return Response({"error":" Please select a destination first."}, staus=404)

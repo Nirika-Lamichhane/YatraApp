@@ -1,23 +1,35 @@
-import requests
 import streamlit as st
+from utils.api import login_user, fetch_data
 
-BASE_URL = "http://127.0.0.1:8000/api"
+# 1. Page Config (MUST be the first streamlit command)
+st.set_page_config(page_title="Travel Planner", layout="centered")
 
-def login_user(username, password):
-    """Calls /api/token/ to get JWT tokens"""
-    url = f"{BASE_URL}/token/"
-    response = requests.post(url, json={"username": username, "password": password})
-    if response.status_code == 200:
-        return response.json() # Returns 'access' and 'refresh'
-    return None
-
-def fetch_data(endpoint, params=None):
-    """Generic fetcher for your dashboard and accounts APIs"""
-    headers = {}
-    if "access_token" in st.session_state:
-        headers["Authorization"] = f"Bearer {st.session_state.access_token}"
+# 2. Check Login State
+if "access_token" not in st.session_state:
+    # --- LOGIN SCREEN ---
+    st.title("🔐 Travel App Login")
     
-    response = requests.get(f"{BASE_URL}/{endpoint}", headers=headers, params=params)
-    if response.status_code == 200:
-        return response.json()
-    return []
+    with st.form("login_form"):
+        u = st.text_input("Username")
+        p = st.text_input("Password", type="password")
+        if st.form_submit_button("Login", use_container_width=True):
+            res = login_user(u, p)
+            if res:
+                st.session_state.access_token = res['access']
+                st.rerun()
+            else:
+                st.error("Invalid Credentials")
+else:
+    # --- LOGGED IN: Custom Sidebar ---
+    st.sidebar.success("Logged In!")
+    if st.sidebar.button("Logout"):
+        del st.session_state.access_token
+        st.rerun()
+
+    # Now we define the navigation for the sub-pages
+    # This prevents the "3 buttons" from showing up on the login screen
+    pg = st.navigation([
+        st.Page("pages/1_Dashboard.py", title="Dashboard", icon="📊"),
+        st.Page("pages/2_AI_Assistant.py", title="AI Assistant", icon="🤖")
+    ])
+    pg.run()

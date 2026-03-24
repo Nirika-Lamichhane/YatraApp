@@ -1,2 +1,2 @@
 # YatraApp
-This is the app made from fluter, django and some ai concepts
+This is the backend done from Django using ML concepts as collaborative filtering.
